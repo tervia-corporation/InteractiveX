@@ -8,18 +8,19 @@
   <img src="https://img.shields.io/badge/license-open--source-green" />
   <img src="https://img.shields.io/badge/audio-miniaudio-blue" />
   <img src="https://img.shields.io/badge/video-pl__mpeg-blue" />
-  <img src="https://img.shields.io/badge/graphics-Direct3D9-purple" />
 </p>
 
 <p align="center">
-  Lightweight • Transparent • Full-source 2D Engine
+  Lightweight • Transparent • Full‑source Real‑Time Engine
 </p>
 
 ---
 
 ## About
 
-**InteractiveX** is a lightweight **2D game engine for Windows** built on top of **Direct3D 9**, written entirely in **C/C++**.
+**InteractiveX** is a lightweight **real‑time engine for Windows** built on top of **Direct3D 9**, written entirely in **C/C++**.
+
+It can be used to build **games, graphical applications, developer tools, and other real‑time software**.
 
 The engine focuses on **simplicity, transparency, and full control**.  
 Instead of hiding systems behind layers of abstraction, InteractiveX exposes everything.
@@ -48,7 +49,7 @@ If you want to understand how something works — you can simply read the source
 
 ## Features
 
-Current version **r0.2** includes a complete set of core systems for building 2D games.
+Current version **r0.2** includes a complete set of core systems for building **real‑time applications and games**.
 
 ### Core Systems
 
@@ -69,11 +70,11 @@ Current version **r0.2** includes a complete set of core systems for building 2D
 
 - Audio playback (music + SFX)
 - PNG / BMP image loading
-- MPEG-1 video playback with audio sync
+- MPEG‑1 video playback with audio sync
 
 ### Interface System
 
-InteractiveX includes a lightweight GUI system inspired by **CSS-style customization**.
+InteractiveX includes a lightweight GUI system inspired by **CSS‑style customization**.
 
 Components include:
 
@@ -96,12 +97,12 @@ All interface components support customizable:
 
 ## Renderer
 
-The renderer is built on **Direct3D 9** and provides:
+The renderer is built on **Direct3D 9** and provides the real‑time graphics foundation of the engine:
 
 - sprite rendering
 - gradient primitives
 - GUI drawing helpers
-- world-space text rendering
+- world‑space text rendering
 - camera transformation
 - font caching
 
@@ -109,7 +110,7 @@ The renderer is built on **Direct3D 9** and provides:
 
 ## Debug Menu
 
-InteractiveX ships with a **built-in debug menu** used to test engine systems.
+InteractiveX ships with a **built‑in debug menu** used to test engine systems.
 
 The debug environment includes interactive demos for engine modules and visual debugging tools.
 
@@ -123,17 +124,12 @@ InteractiveX intentionally keeps dependencies minimal.
 
 ### Bundled
 
-**miniaudio**
-
-Single-header audio library used for music and sound effects.
-
+**miniaudio**  
+Single‑header audio library used for music and sound effects.  
 License: MIT / Public Domain
 
-
-**pl_mpeg**
-
-Single-header MPEG-1 video and audio decoder used by the video player.
-
+**pl_mpeg**  
+Single‑header MPEG‑1 video and audio decoder used by the video player.  
 License: MIT
 
 ---

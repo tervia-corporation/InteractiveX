@@ -10,20 +10,20 @@ The format loosely follows **Keep a Changelog** principles.
 
 First public release of **InteractiveX**.
 
-This version introduces the full core architecture of the engine and its integrated debug environment.
+This version introduces the core architecture of the engine and its real‑time systems, including rendering, audio, GUI, and the integrated debug environment.
 
 ---
 
 ## Engine Core
 
-Added the fundamental systems required to build 2D games:
+Added the fundamental systems required to build **real‑time applications and games**:
 
 - Engine loop and subsystem initialization
 - Scene management system
 - Keyboard and mouse input handling
 - XInput gamepad support
-- High-resolution frame timer
-- 2D camera system (follow, zoom, shake)
+- High‑resolution frame timer
+- Camera system (follow, zoom, shake)
 - Entity system with collision helpers
 - Tilemap rendering with AABB collision
 - Animation system with named clips and callbacks
@@ -42,19 +42,19 @@ Added multimedia support:
 
 - Audio playback system (music + SFX pool) using **miniaudio**
 - PNG / BMP image loading via **GDI+**
-- MPEG-1 video playback using **pl_mpeg**
-- Built-in splash screen system
+- MPEG‑1 video playback using **pl_mpeg**
+- Built‑in splash screen system
 
 ---
 
 ## Rendering
 
-Direct3D9 renderer with:
+Direct3D9 renderer including:
 
 - Sprite rendering
 - Gradient and primitive drawing helpers
 - GUI rendering utilities
-- World-space text rendering
+- World‑space text rendering
 - CPU pixel buffer rendering
 - Debug overlay system
 - Automatic device reset on window resize
@@ -63,7 +63,7 @@ Direct3D9 renderer with:
 
 ## Interface System
 
-Introduced a lightweight GUI framework with CSS-style customization.
+Introduced a lightweight GUI framework with CSS‑style customization.
 
 Components include:
 
@@ -87,7 +87,7 @@ Supports customizable:
 
 ## Debug Environment
 
-InteractiveX ships with a **built-in debug menu** used to test engine systems.
+InteractiveX ships with a **built‑in debug menu** used to test engine systems.
 
 Includes interactive demos for:
 
@@ -116,7 +116,7 @@ InteractiveX intentionally keeps external dependencies minimal.
 | Library | Purpose |
 |-------|--------|
 | **miniaudio** | Audio playback |
-| **pl_mpeg** | MPEG-1 video decoding |
+| **pl_mpeg** | MPEG‑1 video decoding |
 
 ### External Requirement
 
