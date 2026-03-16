@@ -41,7 +41,7 @@ Added the fundamental systems required to build **real‑time applications and g
 Added multimedia support:
 
 - Audio playback system (music + SFX pool) using **miniaudio**
-- PNG / BMP image loading via **GDI+**
+- PNG image loading via **GDI+**
 - MPEG‑1 video playback using **pl_mpeg**
 - Built‑in splash screen system
 
