@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Documentation - InteractiveX</title>
+<link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="page-shell" id="top">
+<div class="page-glow"></div>
+<header class="site-header">
+<div class="topbar">
+<a aria-label="InteractiveX Home" class="brand" href="index.html">
+<img alt="InteractiveX logo" class="brand-logo" src="https://raw.githubusercontent.com/tervia-corporation/InteractiveX/main/docs/image/logo.svg"/>
+<div class="brand-copy">
+<strong>InteractiveX</strong>
+<span>Real-time engine for Windows</span>
+</div>
+</a>
+<div class="header-actions">
+<a class="aero-btn" href="https://github.com/tervia-corporation/InteractiveX" rel="noopener" target="_blank">GitHub</a>
+<a class="aero-btn" href="https://github.com/tervia-corporation/InteractiveX/releases/download/r0.2/InteractiveX-r0_2.zip">Download latest</a>
+</div>
+</div>
+<nav aria-label="Main navigation" class="main-nav">
+<a class="" href="index.html">Home</a><a class="active" href="documentation.html">Documentation</a><a class="" href="download.html">Download</a><a class="" href="about.html">About</a>
+</nav>
+</header>
+<main class="docs-layout">
+<aside class="docs-sidebar">
+<div class="panel-title">InteractiveX r0.2</div>
+<div class="toc-wrap"><p class="doc-status-line">Select a section to read.</p><ul class="docs-nav-list"><li><a class="active" data-target="section-overview" href="#section-overview">Overview</a></li><li><a data-target="section-what-interactivex-is" href="#section-what-interactivex-is">What InteractiveX is</a></li><li><a data-target="section-how-the-engine-boots" href="#section-how-the-engine-boots">How the engine boots</a></li><li><a data-target="section-frame-lifecycle" href="#section-frame-lifecycle">Frame lifecycle</a></li><li><a data-target="section-project-layout" href="#section-project-layout">Project layout</a></li><li><a data-target="section-color-format" href="#section-color-format">Color format</a></li><li><a data-target="section-a-real-minimal-app" href="#section-a-real-minimal-app">A real minimal app</a></li><li><a data-target="section-assets-and-paths" href="#section-assets-and-paths">Assets and paths</a></li><li><a data-target="section-scene-system" href="#section-scene-system">Scene system</a></li><li><a data-target="section-renderer-and-gui-drawing" href="#section-renderer-and-gui-drawing">Renderer and GUI drawing</a></li><li><a data-target="section-interface-widgets" href="#section-interface-widgets">Interface widgets</a></li><li><a data-target="section-input-and-gamepad" href="#section-input-and-gamepad">Input and gamepad</a></li><li><a data-target="section-timer" href="#section-timer">Timer</a></li><li><a data-target="section-camera" href="#section-camera">Camera</a></li><li><a data-target="section-entities" href="#section-entities">Entities</a></li><li><a data-target="section-tilemaps" href="#section-tilemaps">Tilemaps</a></li><li><a data-target="section-animation" href="#section-animation">Animation</a></li><li><a data-target="section-particles" href="#section-particles">Particles</a></li><li><a data-target="section-save-load" href="#section-save-load">Save / Load</a></li><li><a data-target="section-audio" href="#section-audio">Audio</a></li><li><a data-target="section-images" href="#section-images">Images</a></li><li><a data-target="section-video-player" href="#section-video-player">Video player</a></li><li><a data-target="section-splash-screen" href="#section-splash-screen">Splash screen</a></li><li><a data-target="section-video-options-window-control" href="#section-video-options-window-control">Video options / window control</a></li><li><a data-target="section-transitions" href="#section-transitions">Transitions</a></li><li><a data-target="section-random-and-math2d" href="#section-random-and-math2d">Random and Math2D</a></li><li><a data-target="section-effects-fire-system" href="#section-effects-fire-system">Effects / fire system</a></li><li><a data-target="section-important-caveats-discovered-in-the-code" href="#section-important-caveats-discovered-in-the-code">Important caveats discovered in the code</a></li><li><a data-target="section-public-api-reference" href="#section-public-api-reference">Public API reference</a></li></ul></div>
+</aside>
+<section class="docs-content">
+<article class="doc-article"><section class="doc-intro-card is-visible" id="section-overview"><h1 id="interactivex-engine-documentation-r02">InteractiveX Engine Documentation (r0.2)</h1>
+<p>This document was written from the actual <strong>InteractiveX r0.2</strong> source code, including the public headers, engine core, renderer, media modules, interface system, and debug examples.</p>
+<p>InteractiveX is a <strong>real-time engine for Windows</strong> built in <strong>C/C++</strong> on top of <strong>Direct3D 9</strong>.<br/>
+At the current stage, the public systems are focused on <strong>2D rendering and UI</strong>, but the project itself is not limited to games only: the engine can also power tools, graphical applications, test environments, and real-time software.</p>
+<blockquote>
+<p><strong>The source is the documentation.</strong><br/>
+This file exists to make that source easier to navigate.</p>
+</blockquote>
+<hr/>
+</section><section class="doc-section-card" id="section-what-interactivex-is"><h2 id="what-interactivex-is">What InteractiveX is</h2><p>From the codebase today, InteractiveX already provides:</p><ul>
+<li>a Windows engine bootstrap (<code>Engine_*</code>)</li>
+<li>a Direct3D9 renderer</li>
+<li>a GUI drawing layer</li>
+<li>a small widget set (button, label, panel, slider, layout)</li>
+<li>scene management</li>
+<li>mouse / keyboard / gamepad input</li>
+<li>timer and frame stats</li>
+<li>2D camera</li>
+<li>entities</li>
+<li>tilemap rendering + AABB collision resolution</li>
+<li>spritesheet animation</li>
+<li>particles</li>
+<li>binary save/load</li>
+<li>audio through miniaudio</li>
+<li>image loading</li>
+<li>MPEG-1 video playback</li>
+<li>splash screen</li>
+<li>runtime transition overlays</li>
+<li>helper modules like Math2D, RNG and assets path building</li>
+</ul><p>The engine already behaves like a <strong>general real-time runtime</strong>, not just a toy graphics layer.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-how-the-engine-boots"><h2 id="how-the-engine-boots">How the engine boots</h2><p>The actual startup flow in <code>main.cpp</code> + <code>engine/core/engine.cpp</code> is:</p><ol>
+<li>Create a normal Win32 window.</li>
+<li>Call <code>Engine_Initialize(hWnd)</code>.</li>
+<li>Call <code>Video_Initialize(hWnd)</code> and configure window/video options.</li>
+<li>Optionally call <code>Splashscreen_Show(...)</code>.</li>
+<li>Enter a standard Win32 message loop.</li>
+<li>Every frame, call <code>Engine_RunFrame()</code>.</li>
+</ol><p>Internally, <code>Engine_Initialize()</code> currently does all of this:</p><ul>
+<li><code>Renderer_Initialize(hWnd)</code></li>
+<li><code>Input_Initialize()</code></li>
+<li><code>Gamepad_Initialize()</code></li>
+<li><code>Timer_Initialize()</code></li>
+<li><code>Assets_Initialize()</code></li>
+<li><code>MediaAudio_Initialize(hWnd)</code></li>
+<li><code>Scene_Initialize()</code></li>
+<li><code>Scene_RegisterDebugScenes()</code></li>
+<li><code>Scene_SetCurrent(IX_SCENE_MENU)</code></li>
+<li><code>Scene_OnEnterCurrent()</code></li>
+</ul><p>That means if you use the default engine bootstrap, the renderer, input, audio, assets, timer, and scene registry are already wired together for you.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-frame-lifecycle"><h2 id="frame-lifecycle">Frame lifecycle</h2><p>The current engine frame order in <code>Engine_RunFrame()</code> is:</p><pre><code class="language-cpp">Timer_BeginFrame();
+Gamepad_Update();
+Transition_Update(Timer_GetDeltaSeconds());
+Scene_Update();
+
+if (!Transition_IsActive() &amp;&amp; Scene_HasPendingChange())
+{
+    Scene_SetCurrent(Scene_ConsumePendingChange());
+    Scene_OnEnterCurrent();
+}
+
+Scene_Render();
+Timer_EndFrame();
+Input_BeginFrame();
+Sleep(1);
+</code></pre><h3 id="what-this-means-in-practice">What this means in practice</h3><ul>
+<li><code>Input_WasKeyPressed()</code> and <code>Input_WasMouseButtonReleased()</code> are valid during the current frame.</li>
+<li>Scene updates happen <strong>before</strong> scene render.</li>
+<li>Scene change requests are deferred until after update.</li>
+<li>Transition overlays are updated before the scene is rendered.</li>
+<li>Input edge flags are reset at the <strong>end</strong> of the frame by <code>Input_BeginFrame()</code>.</li>
+</ul><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-project-layout"><h2 id="project-layout">Project layout</h2><p>Main public folders:</p><pre><code class="language-text">engine/core/        engine systems
+engine/interface/   widgets and UI structs
+engine/media/       audio / image / video playback
+engine/             renderer + gui primitives
+engine/effects/     optional fire effect module
+engine/debug/       example scenes demonstrating the systems
+</code></pre><p>Recommended reading order if you want to understand the engine fast:</p><ol>
+<li><code>main.cpp</code></li>
+<li><code>engine/core/engine.h/.cpp</code></li>
+<li><code>engine/core/scene.h/.cpp</code></li>
+<li><code>engine/renderer.h/.cpp</code></li>
+<li><code>engine/gui.h/.cpp</code></li>
+<li><code>engine/debug/*.cpp</code></li>
+</ol><p>The debug modules are real usage examples.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-color-format"><h2 id="color-format">Color format</h2><p>The engine uses <strong>ARGB 32-bit colors</strong>:</p><pre><code class="language-cpp">0xAARRGGBB
+</code></pre><p>Examples:</p><pre><code class="language-cpp">0xFFFFFFFF // white
+0xFF000000 // black
+0xFFFF0000 // red
+0xCC2A7ABA // semi-transparent blue
+0x00FFFFFF // fully transparent white
+</code></pre><p>Alpha is the highest byte.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-a-real-minimal-app"><h2 id="a-real-minimal-app">A real minimal app</h2><p>This is the practical startup pattern based on the shipped <code>main.cpp</code>:</p><pre><code class="language-cpp">#include &lt;windows.h&gt;
+#include "engine/core/engine.h"
+#include "engine/core/video.h"
+#include "engine/core/splashscreen.h"
+
+static const int IX_INITIAL_WIDTH  = 960;
+static const int IX_INITIAL_HEIGHT = 640;
+
+LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    switch (msg)
+    {
+        case WM_GETMINMAXINFO:
+            Video_HandleGetMinMaxInfo(lParam);
+            return 0;
+
+        case WM_SIZING:
+            Video_HandleSizing(wParam, lParam);
+            return TRUE;
+
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+    }
+
+    Engine_HandleMessage(hWnd, msg, wParam, lParam);
+    return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
+{
+    WNDCLASSEXA wc = {};
+    wc.cbSize = sizeof(WNDCLASSEXA);
+    wc.style = CS_CLASSDC;
+    wc.lpfnWndProc = MsgProc;
+    wc.hInstance = hInst;
+    wc.lpszClassName = "InteractiveXWindow";
+    RegisterClassExA(&amp;wc);
+
+    HWND hWnd = CreateWindowA(
+        "InteractiveXWindow",
+        "InteractiveX App",
+        WS_OVERLAPPEDWINDOW,
+        100, 100, IX_INITIAL_WIDTH, IX_INITIAL_HEIGHT,
+        NULL, NULL, hInst, NULL);
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+
+    if (!Engine_Initialize(hWnd))
+        return 0;
+
+    Video_Initialize(hWnd);
+    Video_SetResolution(IX_INITIAL_WIDTH, IX_INITIAL_HEIGHT);
+    Video_SetFullscreen(0);
+    Video_SetVSync(0);
+    Video_LockResize(0);
+    Video_SetMinSize(640, 480);
+    Video_Apply();
+
+    Splashscreen_Show(hWnd, NULL, 3.0f); // optional
+
+    MSG msg = {};
+    while (msg.message != WM_QUIT)
+    {
+        while (PeekMessage(&amp;msg, NULL, 0U, 0U, PM_REMOVE))
+        {
+            TranslateMessage(&amp;msg);
+            DispatchMessage(&amp;msg);
+        }
+        if (msg.message == WM_QUIT) break;
+        Engine_RunFrame();
+    }
+
+    Engine_Shutdown();
+    UnregisterClassA("InteractiveXWindow", hInst);
+    return 0;
+}
+</code></pre><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-assets-and-paths"><h2 id="assets-and-paths">Assets and paths</h2><p>The assets system starts from the executable folder and builds derived roots automatically.</p><p>Functions:</p><ul>
+<li><code>Assets_GetBasePath()</code> → executable folder</li>
+<li><code>Assets_GetAssetsRoot()</code> → <code>&lt;base&gt;\assets</code></li>
+<li><code>Assets_GetImagesRoot()</code> → <code>&lt;base&gt;\assets\images</code></li>
+<li><code>Assets_GetAudioRoot()</code> → <code>&lt;base&gt;\assets\audio</code></li>
+</ul><h3 id="typical-usage">Typical usage</h3><pre><code class="language-cpp">char fullPath[MAX_PATH];
+if (Assets_BuildPath("video/test.mpg", fullPath, sizeof(fullPath)))
+{
+    // fullPath becomes &lt;exe&gt;\assets\video\test.mpg
+}
+</code></pre><h3 id="important-detail">Important detail</h3><p><code>Assets_BuildPath()</code> prefixes the <strong>assets root</strong>.<br/>
+So this:</p><pre><code class="language-cpp">Assets_BuildPath("music/theme.ogg", out, sizeof(out));
+</code></pre><p>becomes:</p><pre><code class="language-text">&lt;exe&gt;\assets\music\theme.ogg
+</code></pre><h3 id="related-helpers">Related helpers</h3><ul>
+<li><code>Assets_BuildImagePath("ui/button.png", ...)</code> → <code>&lt;exe&gt;\assets\images\ui\button.png</code></li>
+<li><code>Assets_BuildAudioPath("ui/click.wav", ...)</code> → <code>&lt;exe&gt;\assets\audio\ui\click.wav</code></li>
+</ul><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-scene-system"><h2 id="scene-system">Scene system</h2><p>Scenes are the normal way to structure an InteractiveX app.</p><p>A scene is a callback table:</p><pre><code class="language-cpp">typedef struct IXSceneCallbacks
+{
+    void (*onEnter)(void);
+    void (*onExit)(void);
+    void (*onInvalidateLayout)(void);
+    void (*update)(int mouseX, int mouseY, int mouseDown, int mouseReleased);
+    void (*render)(void);
+    void (*handleMouseMove)(int x, int y);
+    void (*handleDragBegin)(int x, int y);
+    void (*handleDragEnd)(void);
+    void (*handleKeyDown)(WPARAM key);
+} IXSceneCallbacks;
+</code></pre><h3 id="registering-a-scene">Registering a scene</h3><pre><code class="language-cpp">static void MyScene_OnEnter() {}
+static void MyScene_Update(int mouseX, int mouseY, int mouseDown, int mouseReleased) {}
+static void MyScene_Render() {}
+
+void RegisterMyScene()
+{
+    IXSceneCallbacks cb = {};
+    cb.onEnter = MyScene_OnEnter;
+    cb.update  = MyScene_Update;
+    cb.render  = MyScene_Render;
+    Scene_Register(100, cb); // custom scene ids start at IX_SCENE_USER_BASE
+}
+</code></pre><h3 id="switching-scenes">Switching scenes</h3><p>Immediate request:</p><pre><code class="language-cpp">Scene_RequestChange(101);
+</code></pre><p>Animated transition:</p><pre><code class="language-cpp">Transition_FadeBlack(101, 0.4f);
+</code></pre><h3 id="important-practical-rule">Important practical rule</h3><p><code>Scene_Render()</code> already does:</p><pre><code class="language-cpp">Renderer_BeginFrame();
+your_render_callback();
+Renderer_EndFrame();
+</code></pre><p>So inside a normal scene <code>render()</code> callback, <strong>do not call <code>Renderer_BeginFrame()</code> or <code>Renderer_EndFrame()</code> again</strong>.<br/>
+Just draw.</p><h3 id="layout-invalidation">Layout invalidation</h3><p><code>onInvalidateLayout</code> is called when the window is resized and <code>WM_SIZE</code> reaches <code>Engine_HandleMessage()</code>.</p><p>Use it to reposition buttons/sliders/panels based on <code>Renderer_GetOverlayContentRect()</code> or <code>Renderer_GetClientSize()</code>.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-renderer-and-gui-drawing"><h2 id="renderer-and-gui-drawing">Renderer and GUI drawing</h2><p>The renderer is the Direct3D9 frame owner.</p><p>Most user-facing drawing falls into two layers:</p><ul>
+<li><code>Renderer_*</code> → frame lifecycle, sprite blit, overlay panel, pixel buffer</li>
+<li><code>GUI_*</code> → text, rectangles, gradients, chamfered shapes, widget drawing</li>
+</ul><h3 id="manual-frame-use">Manual frame use</h3><p>Use manual frame control only when you are outside the normal scene pipeline:</p><pre><code class="language-cpp">Renderer_BeginFrame();
+GUI_DrawFilledRect(0, 0, 200, 40, 0xFF202020);
+GUI_DrawTextLine(10, 10, "Hello", 0xFFFFFFFF);
+Renderer_EndFrame();
+</code></pre><p>Inside normal scenes, the frame pair is already handled for you.</p><h3 id="drawing-gradients">Drawing gradients</h3><pre><code class="language-cpp">GUI_DrawGradientRect(
+    40, 40, 220, 48,
+    0xFF2A4A6A,   // top
+    0xFF0E2236    // bottom
+);
+</code></pre><h3 id="drawing-chamfered-panels-boxes">Drawing chamfered panels / boxes</h3><pre><code class="language-cpp">GUI_DrawChamferGradientRect(
+    40, 100, 220, 60, 8,
+    0xFF304A66,
+    0xFF16283C
+);
+
+GUI_DrawChamferOutline(
+    40, 100, 220, 60, 8, 1,
+    0xFF6AA0D0
+);
+</code></pre><h3 id="drawing-sprites">Drawing sprites</h3><pre><code class="language-cpp">Renderer_DrawSprite(texture,
+    0, 0, 64, 64,     // source rect
+    200, 120, 128, 128, // destination rect
+    0xFFFFFFFF);
+</code></pre><p>If <code>srcW</code> and <code>srcH</code> are zero in entity rendering, the whole texture is used.</p><h3 id="world-space-text">World-space text</h3><p>If a camera is attached, <code>GUI_DrawWorldText()</code> automatically transforms world coordinates to screen coordinates:</p><pre><code class="language-cpp">GUI_DrawWorldText(
+    player.x + player.w * 0.5f,
+    player.y - 8.0f,
+    "100 HP",
+    0xFFFF4444,
+    0.5f, 1.0f,
+    0, 14, 0
+);
+</code></pre><p>This is perfect for name tags, HP labels, damage numbers, etc.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-interface-widgets"><h2 id="interface-widgets">Interface widgets</h2><p>InteractiveX widgets are <strong>state + drawing</strong> structs.<br/>
+They are not automatic retained-mode UI. You drive them manually.</p><p>That means the pattern is usually:</p><ol>
+<li><code>*_Init(...)</code></li>
+<li>Optional style setters</li>
+<li>In update: handle input with <code>Button_Handle()</code> or <code>Slider_Handle()</code></li>
+<li>In render: draw with <code>GUI_DrawButton()</code> / <code>GUI_DrawSlider()</code> / etc.</li>
+</ol><h3 id="buttons">Buttons</h3><p>The full real pattern is:</p><pre><code class="language-cpp">static IXButton g_playButton;
+
+void MyScene_OnEnter()
+{
+    Button_Init(&amp;g_playButton, 40, 40, 220, 40, "Play");
+    Button_SetGradients(&amp;g_playButton,
+        0xFF20324A, 0xFF122033,
+        0xFF294365, 0xFF18314D,
+        0xFF35608F, 0xFF214F79);
+    Button_SetStroke(&amp;g_playButton, 0xFF90C8FF, 1);
+    Button_SetCornerRadius(&amp;g_playButton, 6);
+    Button_SetTooltip(&amp;g_playButton, "Start the demo");
+}
+
+void MyScene_Update(int mouseX, int mouseY, int mouseDown, int mouseReleased)
+{
+    if (Button_Handle(&amp;g_playButton, mouseX, mouseY, mouseDown, mouseReleased))
+    {
+        Scene_RequestChange(101);
+    }
+}
+
+void MyScene_Render()
+{
+    GUI_DrawButton(&amp;g_playButton);
+
+    const char* tip = Button_GetTooltip(&amp;g_playButton);
+    if (tip)
+        GUI_DrawTextLine(40, 90, tip, 0xFFFFD27F);
+}
+</code></pre><h4 id="important-behavior">Important behavior</h4><p><code>Button_Handle()</code> returns <code>1</code> only when:</p><ul>
+<li>the button was pressed</li>
+<li>the mouse is released</li>
+<li>the pointer is still inside the button</li>
+</ul><p>That is real click behavior.</p><h4 id="sprite-buttons">Sprite buttons</h4><pre><code class="language-cpp">Button_SetSpriteStrip(&amp;g_playButton, myTexture, 64, 32);
+// maps frame 0 = normal, 1 = hover, 2 = pressed, 3 = disabled
+</code></pre><p>Or explicit per state:</p><pre><code class="language-cpp">Button_SetSprite(&amp;g_playButton, myTexture);
+Button_SetSpriteFrame(&amp;g_playButton, IX_BTN_NORMAL,   0,   0, 64, 32);
+Button_SetSpriteFrame(&amp;g_playButton, IX_BTN_HOVER,   64,   0, 64, 32);
+Button_SetSpriteFrame(&amp;g_playButton, IX_BTN_PRESSED, 128,  0, 64, 32);
+Button_SetSpriteFrame(&amp;g_playButton, IX_BTN_DISABLED,192,  0, 64, 32);
+</code></pre><h3 id="labels">Labels</h3><p>Labels are pure display widgets. They do not handle input.</p><p>Solid background example:</p><pre><code class="language-cpp">IXLabel lbl;
+Label_Init(&amp;lbl, 24, 24, 180, 28, "Score: 0000");
+Label_SetBackground(&amp;lbl, 0xCC162030, 8);
+Label_SetBorder(&amp;lbl, 0xFF4A7FB0);
+Label_SetCornerRadius(&amp;lbl, 14);
+Label_SetTextColor(&amp;lbl, 0xFFFFFFFF);
+
+GUI_DrawLabel(&amp;lbl);
+</code></pre><p>Gradient label:</p><pre><code class="language-cpp">Label_SetBackgroundGradient(&amp;lbl, 0xDD1A3A5A, 0xDD0A1828, 8);
+</code></pre><p>Shadowed wrapped text:</p><pre><code class="language-cpp">Label_SetBounds(&amp;lbl, 24, 24, 260, 80);
+Label_SetWrap(&amp;lbl, 1);
+Label_EnableShadow(&amp;lbl, 1);
+Label_SetShadowColor(&amp;lbl, 0xCC000000);
+</code></pre><p>Sprite-backed label:</p><pre><code class="language-cpp">Label_SetBackgroundSprite(&amp;lbl, texture, 0xFFFFFFFF, 4);
+</code></pre><h3 id="panels">Panels</h3><p>Panels are containers you position manually. They are useful as windows, cards and sidebars.</p><pre><code class="language-cpp">IXPanel panel;
+Panel_Init(&amp;panel, 16, 16, 320, 220, "Settings");
+
+Panel_SetBodyGradient(&amp;panel,   0xDD0A1020, 0xDD05080F);
+Panel_SetHeaderGradient(&amp;panel, 0xFF1A3A5A, 0xFF0E2236);
+Panel_SetBorderStyle(&amp;panel,    0xFF2A6A9A, 2);
+Panel_SetCornerRadius(&amp;panel,   6);
+Panel_SetTitleFont(&amp;panel, 20, 1, 1); // size, bold, align=center
+Panel_SetTitleColor(&amp;panel, 0xFFFFFFFF);
+
+GUI_DrawPanel(&amp;panel);
+</code></pre><h3 id="sliders">Sliders</h3><p>Sliders are interactive like buttons, but they use drag state instead of click-release state.</p><pre><code class="language-cpp">static IXSlider g_volume;
+
+void MyScene_OnEnter()
+{
+    Slider_Init(&amp;g_volume, 40, 120, 260, 40, 0, 100, 75, "Volume");
+    Slider_SetTrackStyle(&amp;g_volume, 0x88101820, 0xCC2A7ABA, 8, 4);
+    Slider_SetKnobStyle(&amp;g_volume, 0xFFE0E8F0, 0xFFF0F8FF, 0xFFB0C8DC, 14, 18, 4);
+    Slider_SetKnobStroke(&amp;g_volume, 0xFF3A8ACA, 1);
+    Slider_SetValueStyle(&amp;g_volume, 0xFFFFD27F, 16);
+}
+
+void MyScene_Update(int mouseX, int mouseY, int mouseDown, int mouseReleased)
+{
+    (void)mouseReleased;
+    if (Slider_Handle(&amp;g_volume, mouseX, mouseY, mouseDown))
+    {
+        int value = Slider_GetValue(&amp;g_volume);
+        MediaAudio_MusicSetVolume((float)value / 100.0f);
+    }
+}
+
+void MyScene_Render()
+{
+    GUI_DrawSlider(&amp;g_volume);
+}
+</code></pre><h4 id="important-behavior_1">Important behavior</h4><p><code>Slider_Handle()</code> starts dragging when the cursor is inside and the mouse is down.<br/>
+While dragging, it updates from mouse X continuously. It returns <code>1</code> only if the numeric value changed.</p><h3 id="layout">Layout</h3><p><code>IXLayout</code> is a simple vertical flow helper.</p><p>This is how the shipped debug menu positions buttons:</p><pre><code class="language-cpp">IXLayout layout;
+Layout_BeginVertical(&amp;layout, x, y, width, height, 8);
+
+int bx, by, bw, bh;
+Layout_Next(&amp;layout, 36, &amp;bx, &amp;by, &amp;bw, &amp;bh);
+Button_SetBounds(&amp;button1, bx, by, bw, bh);
+
+Layout_Next(&amp;layout, 36, &amp;bx, &amp;by, &amp;bw, &amp;bh);
+Button_SetBounds(&amp;button2, bx, by, bw, bh);
+
+Layout_Skip(&amp;layout, 10);
+
+Layout_Next(&amp;layout, 40, &amp;bx, &amp;by, &amp;bw, &amp;bh);
+Slider_SetBounds(&amp;slider, bx, by, bw, bh);
+</code></pre><p>Use it whenever you want menus to adapt to resize without manual Y math.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-input-and-gamepad"><h2 id="input-and-gamepad">Input and gamepad</h2><h3 id="keyboard-mouse-input">Keyboard / mouse input</h3><p>InteractiveX input is message-based.<br/>
+<code>Engine_HandleMessage()</code> forwards Win32 events into <code>Input_HandleMessage()</code>.</p><p>The most important distinction:</p><ul>
+<li><code>Input_IsKeyDown()</code> / <code>Input_IsMouseButtonDown()</code> → held state</li>
+<li><code>Input_WasKeyPressed()</code> / <code>Input_WasMouseButtonPressed()</code> → edge this frame</li>
+<li><code>Input_WasKeyReleased()</code> / <code>Input_WasMouseButtonReleased()</code> → release edge this frame</li>
+</ul><p>Example:</p><pre><code class="language-cpp">if (Input_IsKeyDown('A')) player.vx = -200.0f;
+if (Input_IsKeyDown('D')) player.vx =  200.0f;
+
+if (Input_WasKeyPressed(VK_SPACE))
+    Jump();
+</code></pre><p>Mouse position:</p><pre><code class="language-cpp">int mx = Input_GetMouseX();
+int my = Input_GetMouseY();
+</code></pre><p>Wheel:</p><pre><code class="language-cpp">int delta = Input_GetMouseWheelDelta();
+if (delta &gt; 0) zoom += 0.1f;
+if (delta &lt; 0) zoom -= 0.1f;
+</code></pre><h3 id="gamepad">Gamepad</h3><p>Gamepad is unified across XInput and DirectInput-backed controllers.</p><p>Typical usage:</p><pre><code class="language-cpp">if (Gamepad_IsConnected(0))
+{
+    float lx = Gamepad_GetAxis(0, IX_AXIS_LX);
+    float ly = Gamepad_GetAxis(0, IX_AXIS_LY);
+
+    if (Gamepad_WasButtonPressed(0, IX_GAMEPAD_A))
+        Jump();
+
+    player.vx = lx * 220.0f;
+}
+</code></pre><p>Rumble:</p><pre><code class="language-cpp">Gamepad_SetVibration(0, 0.5f, 1.0f);
+</code></pre><p>Diagnostics:</p><pre><code class="language-cpp">const char* name = Gamepad_GetName(0);
+int backend = Gamepad_GetBackend(0);
+</code></pre><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-timer"><h2 id="timer">Timer</h2><p>Timer is already called by the engine.</p><p>Use it for time-based motion:</p><pre><code class="language-cpp">float dt = Timer_GetDeltaSeconds();
+player.x += player.vx * dt;
+player.y += player.vy * dt;
+</code></pre><p>Useful reads:</p><pre><code class="language-cpp">float fps     = Timer_GetRenderFPS();
+float frameMs = Timer_GetSmoothedFrameMilliseconds();
+double time   = Timer_GetTotalSeconds();
+</code></pre><p>If you run a fixed-step simulation inside your scene, call:</p><pre><code class="language-cpp">Timer_AddSimulationSteps(stepsThisFrame);
+</code></pre><p>That feeds the UPS metric shown in the overlay.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-camera"><h2 id="camera">Camera</h2><p>The camera converts world coordinates into screen coordinates and supports follow, zoom, shake and bounds.</p><p>Real usage pattern (from the debug camera/tilemap style):</p><pre><code class="language-cpp">static IXCamera cam;
+
+void InitWorld()
+{
+    Camera_Init(&amp;cam);
+    Camera_SetWorldBounds(&amp;cam, 0.0f, 0.0f, 2000.0f, 1500.0f);
+    Camera_SetFollowLerp(&amp;cam, 0.10f);
+    Camera_Update(&amp;cam, 0.0f);
+}
+
+void UpdateWorld(float dt)
+{
+    Camera_Follow(&amp;cam,
+        player.x + player.w * 0.5f,
+        player.y + player.h * 0.5f,
+        dt);
+
+    Camera_Update(&amp;cam, dt);
+}
+
+void RenderWorld()
+{
+    Camera_Attach(&amp;cam);
+    Tilemap_Render(&amp;map);
+    EntityList_RenderAll(&amp;entities);
+    Camera_Detach();
+}
+</code></pre><h3 id="manual-transform">Manual transform</h3><pre><code class="language-cpp">int sx, sy;
+Camera_WorldToScreen(&amp;cam, player.x, player.y, &amp;sx, &amp;sy);
+Renderer_DrawSprite(tex, 0, 0, 64, 64, sx, sy, 64, 64, 0xFFFFFFFF);
+</code></pre><h3 id="shake">Shake</h3><pre><code class="language-cpp">Camera_Shake(&amp;cam, 8.0f, 0.25f);
+</code></pre><h3 id="world-picking">World picking</h3><pre><code class="language-cpp">float wx, wy;
+Camera_ScreenToWorld(&amp;cam, mouseX, mouseY, &amp;wx, &amp;wy);
+</code></pre><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-entities"><h2 id="entities">Entities</h2><p><code>IXEntity</code> is the engine’s basic world object: transform, size, texture, source frame, tint, state.</p><p>Typical usage:</p><pre><code class="language-cpp">IXEntity player;
+Entity_Init(&amp;player, 100.0f, 200.0f, 64, 64);
+Entity_SetTexture(&amp;player, texture);
+Entity_SetVelocity(&amp;player, 80.0f, 0.0f);
+
+float dt = Timer_GetDeltaSeconds();
+Entity_Update(&amp;player, dt);
+Entity_Render(&amp;player);
+</code></pre><h3 id="solid-color-rectangles">Solid color rectangles</h3><p>If <code>texture == NULL</code>, <code>Entity_Render()</code> draws a solid rect using <code>tint</code>.</p><pre><code class="language-cpp">IXEntity marker;
+Entity_Init(&amp;marker, 100.0f, 100.0f, 20, 20);
+Entity_SetTint(&amp;marker, 0xFFFF0000);
+Entity_Render(&amp;marker);
+</code></pre><h3 id="collision-helpers">Collision helpers</h3><p>AABB:</p><pre><code class="language-cpp">if (Entity_Overlaps(&amp;a, &amp;b)) { ... }
+</code></pre><p>Circle overlap:</p><pre><code class="language-cpp">if (Entity_OverlapsCircle(&amp;a, &amp;b)) { ... }
+</code></pre><p>Point hit:</p><pre><code class="language-cpp">if (Entity_ContainsPoint(&amp;buttonHitbox, wx, wy)) { ... }
+</code></pre><p>Ray hit:</p><pre><code class="language-cpp">float tHit;
+if (Entity_RayHit(&amp;enemy, originX, originY, dirX, dirY, 1000.0f, &amp;tHit))
+{
+    // hit at distance tHit
+}
+</code></pre><h3 id="entity-lists">Entity lists</h3><p><code>IXEntityList</code> is fixed-capacity and does not allocate.</p><pre><code class="language-cpp">static IXEntity entityBuffer[128];
+static IXEntityList entities;
+
+EntityList_Init(&amp;entities, entityBuffer, 128);
+
+int idx = EntityList_Add(&amp;entities);
+if (idx &gt;= 0)
+{
+    Entity_SetPosition(&amp;entities.entities[idx], 100.0f, 100.0f);
+    Entity_SetSize(&amp;entities.entities[idx], 32, 32);
+    Entity_SetTint(&amp;entities.entities[idx], 0xFF00FF00);
+}
+
+EntityList_UpdateAll(&amp;entities, Timer_GetDeltaSeconds());
+EntityList_RenderAll(&amp;entities);
+</code></pre><p>Removal is <strong>swap-with-last</strong>, so order is not preserved.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-tilemaps"><h2 id="tilemaps">Tilemaps</h2><p><code>IXTilemap</code> is a fixed-size grid with:</p><ul>
+<li>color-per-tile-type rendering</li>
+<li>camera-aware rendering</li>
+<li>solid/passable tile types</li>
+<li>AABB collision resolution for entities</li>
+</ul><h3 id="setup">Setup</h3><pre><code class="language-cpp">IXTilemap map;
+Tilemap_Init(&amp;map, 60, 24, 32, 32);
+
+Tilemap_SetTileColor(&amp;map, 1, 0xFF607040); // grass
+Tilemap_SetTileColor(&amp;map, 2, 0xFF808090); // stone
+Tilemap_SetTileColor(&amp;map, 3, 0xAA3868A8); // water
+
+Tilemap_SetSolid(&amp;map, 3, 0); // water is decorative only
+
+Tilemap_Fill(&amp;map, 0, 23, 60, 1, 1); // bottom row = grass
+Tilemap_SetTile(&amp;map, 5, 20, 2);
+</code></pre><h3 id="render-with-camera">Render with camera</h3><pre><code class="language-cpp">Camera_Attach(&amp;cam);
+Tilemap_Render(&amp;map);
+Entity_Render(&amp;player);
+Camera_Detach();
+</code></pre><h3 id="convert-world-tile">Convert world → tile</h3><pre><code class="language-cpp">int col, row;
+Tilemap_WorldToTile(&amp;map, player.x, player.y, &amp;col, &amp;row);
+</code></pre><h3 id="entity-collision-with-solid-tiles">Entity collision with solid tiles</h3><pre><code class="language-cpp">Entity_Update(&amp;player, dt);
+Tilemap_ResolveCollision(&amp;map, &amp;player);
+</code></pre><p>That is the intended order. The header and implementation both assume collision resolution happens <strong>after movement</strong>.</p><h3 id="ground-probing-example">Ground probing example</h3><p>This is a practical pattern taken from the tilemap debug scene:</p><pre><code class="language-cpp">float feetY = player.y + (float)player.h + 1.0f;
+float leftX = player.x + 1.0f;
+float rightX = player.x + (float)player.w - 2.0f;
+
+int row = (int)(feetY / 32.0f);
+int c0  = (int)(leftX / 32.0f);
+int c1  = (int)(rightX / 32.0f);
+
+int onGround = 0;
+for (int c = c0; c &lt;= c1; c++)
+{
+    if (Tilemap_IsSolid(&amp;map, c, row))
+    {
+        onGround = 1;
+        break;
+    }
+}
+</code></pre><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-animation"><h2 id="animation">Animation</h2><p>Animation is a spritesheet clip player.</p><h3 id="standalone-usage">Standalone usage</h3><pre><code class="language-cpp">IXAnimation anim;
+Animation_Init(&amp;anim, sheetTexture, 64, 64);
+
+Animation_AddClip(&amp;anim, "idle",   0, 2,  8.0f, 1);
+Animation_AddClip(&amp;anim, "run",    2, 3, 12.0f, 1);
+Animation_AddClip(&amp;anim, "attack", 5, 3, 10.0f, 0);
+
+Animation_Play(&amp;anim, "idle");
+
+void Update()
+{
+    Animation_Update(&amp;anim, Timer_GetDeltaSeconds());
+}
+
+void Render()
+{
+    Animation_Render(&amp;anim, 400, 200, 128, 128, 0xFFFFFFFF);
+}
+</code></pre><h3 id="apply-to-entity">Apply to entity</h3><p>This is the most useful pattern when you already use entities:</p><pre><code class="language-cpp">IXEntity player;
+Entity_Init(&amp;player, 500.0f, 200.0f, 128, 128);
+
+Animation_Update(&amp;anim, dt);
+Animation_ApplyToEntity(&amp;anim, &amp;player);
+Entity_SetTexture(&amp;player, sheetTexture);
+Entity_Render(&amp;player);
+</code></pre><h3 id="end-callback">End callback</h3><pre><code class="language-cpp">static void OnClipEnd(IXAnimation* anim, const char* clipName)
+{
+    (void)clipName;
+    Animation_Play(anim, "idle");
+}
+
+Animation_SetOnClipEnd(&amp;anim, OnClipEnd);
+</code></pre><p>This is especially useful for “once” animations like attack or death.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-particles"><h2 id="particles">Particles</h2><p>The particle system is fixed-buffer and allocation-free after setup.</p><h3 id="continuous-emitter">Continuous emitter</h3><pre><code class="language-cpp">#define MAX_PARTICLES 300
+static IXParticle particleBuffer[MAX_PARTICLES];
+static IXEmitter emitter;
+
+Emitter_Init(&amp;emitter, particleBuffer, MAX_PARTICLES);
+Emitter_SetPosition(&amp;emitter, 400.0f, 300.0f);
+Emitter_SetSpread(&amp;emitter, 10.0f, 10.0f);
+Emitter_SetSpawnRate(&amp;emitter, 60.0f);
+Emitter_SetLifetime(&amp;emitter, 0.4f, 1.0f);
+Emitter_SetVelocity(&amp;emitter, -40.0f, 40.0f, -120.0f, -60.0f);
+Emitter_SetGravity(&amp;emitter, 0.0f, 200.0f);
+Emitter_SetSize(&amp;emitter, 3, 8);
+Emitter_SetColorOverLife(&amp;emitter, 0xFFFF8800, 0x00FF2200);
+
+void Update()
+{
+    Emitter_Update(&amp;emitter, Timer_GetDeltaSeconds());
+}
+
+void Render()
+{
+    Camera_Attach(&amp;cam);
+    Emitter_Render(&amp;emitter);
+    Camera_Detach();
+}
+</code></pre><h3 id="burst">Burst</h3><pre><code class="language-cpp">Emitter_SetSpawnRate(&amp;emitter, 0.0f);
+Emitter_Burst(&amp;emitter, 80);
+</code></pre><h3 id="pause-stop-reset">Pause / stop / reset</h3><ul>
+<li><code>Emitter_Stop()</code> → stop spawning, but existing particles continue until death</li>
+<li><code>Emitter_Pause()</code> → freeze update and spawning</li>
+<li><code>Emitter_Reset()</code> → kill all particles and reset the emitter</li>
+</ul><h3 id="texture-particles">Texture particles</h3><pre><code class="language-cpp">Emitter_SetTexture(&amp;emitter, particleTexture, 0, 0);
+</code></pre><p>If you pass <code>NULL</code>, particles render as solid quads.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-save-load"><h2 id="save-load">Save / Load</h2><p>The save system writes a custom <code>.ixsav</code> binary format with key/value entries.</p><h3 id="save-example">Save example</h3><pre><code class="language-cpp">SaveLoad_SetBasePath(IX_SAVE_PATH_APPDATA, "MyGame");
+
+IXSaveWriter* w = SaveLoad_WriterCreate(1);
+SaveLoad_WriterPutInt(w,   "score", 1200);
+SaveLoad_WriterPutFloat(w, "speed", 3.5f);
+SaveLoad_WriterPutStr(w,   "name",  "Mateus");
+
+int ok = SaveLoad_WriterSave(w, "slot1");
+SaveLoad_WriterDestroy(w);
+</code></pre><p>This writes something like:</p><pre><code class="language-text">%APPDATA%\MyGame\slot1.ixsav
+</code></pre><h3 id="load-example">Load example</h3><pre><code class="language-cpp">IXSaveReader* r = SaveLoad_ReaderOpen("slot1");
+if (r)
+{
+    int score = SaveLoad_ReaderGetInt(r, "score");
+    float speed = SaveLoad_ReaderGetFloat(r, "speed");
+
+    char name[64];
+    SaveLoad_ReaderGetStr(r, "name", name, sizeof(name));
+
+    unsigned int version = SaveLoad_ReaderGetVersion(r);
+    SaveLoad_ReaderDestroy(r);
+}
+</code></pre><h3 id="file-management">File management</h3><pre><code class="language-cpp">if (SaveLoad_FileExists("slot1"))
+{
+    SaveLoad_FileDelete("slot1");
+}
+</code></pre><h3 id="base-path-options">Base path options</h3><pre><code class="language-cpp">SaveLoad_SetBasePath(IX_SAVE_PATH_EXE, "save");
+SaveLoad_SetBasePath(IX_SAVE_PATH_APPDATA, "MyGame");
+SaveLoad_SetBasePath(IX_SAVE_PATH_DOCUMENTS, "MyGame\\saves");
+SaveLoad_SetBasePathAbsolute("C:\\MyCustomFolder");
+</code></pre><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-audio"><h2 id="audio">Audio</h2><p>Audio uses miniaudio and is already initialized by <code>Engine_Initialize()</code>.</p><h3 id="music">Music</h3><p>Music expects a path relative to the <strong>assets root</strong>, not the executable root.</p><pre><code class="language-cpp">MediaAudio_MusicPlay("music/theme.ogg", 1); // resolves to &lt;exe&gt;\assets\music\theme.ogg
+MediaAudio_MusicSetVolume(0.75f);
+
+if (MediaAudio_MusicIsPlaying())
+{
+    // ...
+}
+</code></pre><p>Pause / resume / stop:</p><pre><code class="language-cpp">MediaAudio_MusicPause();
+MediaAudio_MusicResume();
+MediaAudio_MusicStop();
+</code></pre><h3 id="sfx">SFX</h3><pre><code class="language-cpp">MediaAudio_SFXPlay("sfx/jump.wav", 1.0f);
+MediaAudio_SFXPlay("ui/click.wav", 0.6f);
+MediaAudio_SFXSetMasterVolume(0.8f);
+</code></pre><p>The engine currently uses an 8-voice SFX pool (<code>IX_SFX_VOICES</code>).</p><h3 id="diagnostics">Diagnostics</h3><pre><code class="language-cpp">const char* lastError = MediaAudio_GetLastError();
+const char* resolved  = MediaAudio_GetLastResolvedPath();
+</code></pre><p>Useful when a file is not found or an audio load fails.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-images"><h2 id="images">Images</h2><p>There are <strong>two public image APIs</strong> in the repo:</p><ul>
+<li><code>engine/media/image.h</code></li>
+<li><code>engine/interface/image.h</code></li>
+</ul><p>Both expose <code>IXImage</code> and <code>Image_*</code> names, so <strong>do not include both in the same translation unit</strong>.</p><h3 id="recommended-rule">Recommended rule</h3><p>For gameplay / rendering, prefer the one already used by the debug scenes:</p><pre><code class="language-cpp">#include "engine/media/image.h"
+</code></pre><h3 id="media-image-example">Media image example</h3><pre><code class="language-cpp">#include "engine/media/image.h"
+
+IXImage img = {};
+if (Image_LoadPNG(Renderer_GetDevice(), "assets/demo.png", &amp;img))
+{
+    Renderer_DrawSprite(
+        img.texture,
+        0, 0, img.width, img.height,
+        100, 100, img.width, img.height,
+        0xFFFFFFFF
+    );
+}
+</code></pre><h3 id="interface-image-api">Interface image API</h3><p>The interface image module supports <code>Image_LoadFromFile()</code> for <code>PNG</code> assets. It is useful if you want a simpler generic image wrapper, but because of the symbol collision, use it carefully.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-video-player"><h2 id="video-player">Video player</h2><p>The video player decodes <strong>MPEG-1 video + MPEG audio layer 2</strong> through <code>pl_mpeg</code>.</p><h3 id="supported-format">Supported format</h3><p>Use <code>.mpg</code> / <code>.mpeg</code> in MPEG-1 format.</p><p>Suggested ffmpeg conversion from the source comments:</p><pre><code class="language-bash">ffmpeg -i input.mp4 -c:v mpeg1video -c:a mp2 -q:v 5 output.mpg
+</code></pre><h3 id="open-update-render-pattern">Open / update / render pattern</h3><pre><code class="language-cpp">if (VideoPlayer_Open("assets/video/test.mpg"))
+{
+    VideoPlayer_SetLoop(0);
+    VideoPlayer_Play();
+}
+
+void Update()
+{
+    if (VideoPlayer_IsPlaying())
+        VideoPlayer_Update(Timer_GetDeltaSeconds());
+}
+
+void Render()
+{
+    VideoPlayer_RenderFit(392, 4, 800, 600, 0xFF000000);
+}
+</code></pre><h3 id="controls">Controls</h3><pre><code class="language-cpp">VideoPlayer_Play();
+VideoPlayer_Pause();
+VideoPlayer_Stop();
+VideoPlayer_SetLoop(1);
+VideoPlayer_SetVolume(0.8f);
+</code></pre><h3 id="state-queries">State queries</h3><pre><code class="language-cpp">if (VideoPlayer_IsFinished()) { ... }
+
+float pos = VideoPlayer_GetPosition();
+float dur = VideoPlayer_GetDuration();
+int w = VideoPlayer_GetVideoWidth();
+int h = VideoPlayer_GetVideoHeight();
+</code></pre><h3 id="blocking-playback">Blocking playback</h3><p>For simple intro/cutscene cases without a normal game loop:</p><pre><code class="language-cpp">VideoPlayer_PlayBlocking(hWnd, "assets/video/intro.mpg", 0, 1);
+</code></pre><p>Arguments:</p><ul>
+<li><code>loop</code></li>
+<li><code>hideOverlay</code></li>
+</ul><p><code>ESC</code>, <code>Enter</code>, <code>Space</code>, and mouse click exit blocking playback.</p><h3 id="important-path-detail">Important path detail</h3><p>Unlike the audio system, <code>VideoPlayer_Open()</code> takes the path directly and does <strong>not</strong> call <code>Assets_BuildPath()</code> for you.<br/>
+So pass the full asset-relative path yourself, e.g. <code>"assets/video/test.mpg"</code>.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-splash-screen"><h2 id="splash-screen">Splash screen</h2><p>Splash is a self-contained blocking screen used before the main loop.</p><h3 id="quick-use">Quick use</h3><pre><code class="language-cpp">Splashscreen_Show(hWnd, NULL, 3.0f);
+</code></pre><p>If the image path is <code>NULL</code>, the engine tries:</p><pre><code class="language-text">assets/splash/bg.png
+</code></pre><h3 id="full-control">Full control</h3><pre><code class="language-cpp">Splashscreen_ShowEx(
+    hWnd,
+    "assets/logo.png",
+    4.0f,         // total duration
+    0.6f,         // fade in
+    0.8f,         // fade out
+    0xFF000000,   // background color
+    1             // skipFadeOnExit
+);
+</code></pre><p>Skip inputs: <code>ESC</code>, <code>Enter</code>, <code>Space</code>, mouse click.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-video-options-window-control"><h2 id="video-options-window-control">Video options / window control</h2><p>The video module controls:</p><ul>
+<li>fullscreen borderless</li>
+<li>windowed resolution</li>
+<li>vsync</li>
+<li>resize lock</li>
+<li>minimum size</li>
+<li>display mode enumeration</li>
+</ul><h3 id="typical-setup">Typical setup</h3><pre><code class="language-cpp">Video_Initialize(hWnd);
+Video_SetResolution(1280, 720);
+Video_SetFullscreen(0);
+Video_SetVSync(1);
+Video_LockResize(1);
+Video_SetMinSize(640, 480);
+Video_Apply();
+</code></pre><h3 id="runtime-changes">Runtime changes</h3><pre><code class="language-cpp">Video_SetFullscreen(1);
+Video_Apply();
+</code></pre><h3 id="available-modes">Available modes</h3><pre><code class="language-cpp">IXVideoMode modes[64];
+int count = Video_GetAvailableModes(modes, 64);
+for (int i = 0; i &lt; count; i++)
+{
+    // modes[i].width / height / refreshRate
+}
+</code></pre><h3 id="important-rule">Important rule</h3><p><code>Video_Apply()</code> can reset the D3D device.<br/>
+Call it <strong>outside</strong> any <code>Renderer_BeginFrame()</code> / <code>Renderer_EndFrame()</code> pair.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-transitions"><h2 id="transitions">Transitions</h2><p>Transitions are engine-managed scene overlays.</p><h3 id="basic-usage">Basic usage</h3><pre><code class="language-cpp">Transition_FadeBlack(IX_SCENE_MENU, 0.4f);
+Transition_FadeWhite(IX_SCENE_MENU, 0.4f);
+</code></pre><h3 id="full-control_1">Full control</h3><pre><code class="language-cpp">Transition_Request(IX_SCENE_MENU, IX_TRANSITION_WIPE_H, 0.5f, 0x000000);
+</code></pre><h3 id="available-types">Available types</h3><ul>
+<li><code>IX_TRANSITION_FADE</code></li>
+<li><code>IX_TRANSITION_WIPE_H</code></li>
+<li><code>IX_TRANSITION_WIPE_V</code></li>
+</ul><h3 id="blocking-input-while-active">Blocking input while active</h3><pre><code class="language-cpp">if (Transition_IsActive())
+    return;
+</code></pre><p>The engine already updates and renders transition overlays internally.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-random-and-math2d"><h2 id="random-and-math2d">Random and Math2D</h2><p>Both modules are header-only.</p><h3 id="rng">RNG</h3><pre><code class="language-cpp">IXRng rng;
+Rng_Seed(&amp;rng, 12345);
+
+int number = Rng_Int(&amp;rng, 1, 6);
+float v = Rng_Float(&amp;rng, -1.0f, 1.0f);
+
+if (Rng_Chance(&amp;rng, 0.25f))
+{
+    // 25% chance
+}
+</code></pre><h3 id="vec2-basics">Vec2 basics</h3><pre><code class="language-cpp">IXVec2 a = Vec2(10.0f, 20.0f);
+IXVec2 b = Vec2(40.0f, 60.0f);
+
+IXVec2 delta = Vec2_Sub(b, a);
+IXVec2 dir   = Vec2_Normalize(delta);
+float dist   = Vec2_Length(delta);
+</code></pre><h3 id="angles">Angles</h3><pre><code class="language-cpp">float radians = Vec2_Angle(delta);
+IXVec2 offset = Vec2_FromAngle(IX_DEG2RAD(45.0f), 100.0f);
+</code></pre><h3 id="overlap-helpers">Overlap helpers</h3><pre><code class="language-cpp">if (IX_OverlapAABB(ax, ay, aw, ah, bx, by, bw, bh)) { ... }
+if (IX_OverlapCircle(ax, ay, ar, bx, by, br)) { ... }
+if (IX_PointInAABB(px, py, rx, ry, rw, rh)) { ... }
+if (IX_PointInCircle(px, py, cx, cy, cr)) { ... }
+</code></pre><h3 id="ray-vs-aabb">Ray vs AABB</h3><pre><code class="language-cpp">float tHit;
+if (IX_RayAABB(ox, oy, dx, dy, 1000.0f, rx, ry, rw, rh, &amp;tHit))
+{
+    // hit
+}
+</code></pre><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-effects-fire-system"><h2 id="effects-fire-system">Effects / fire system</h2><p>The <code>engine/effects</code> module exposes a configurable fire effect.</p><h3 id="high-level-wrapper">High-level wrapper</h3><pre><code class="language-cpp">FireSettings settings = {};
+settings.width = 320;
+settings.height = 168;
+settings.paletteSize = 36;
+settings.maxDecay = 3;
+settings.windStrength = 0;
+settings.baseIntensity = 255;
+
+Effect_InitializeFire(settings);
+Effect_SetFireSpeed(16);
+Effect_UpdateFire();
+
+const unsigned int* pixels = Effect_GetFireBuffer();
+int w = Effect_GetFireWidth();
+int h = Effect_GetFireHeight();
+
+Renderer_DrawPixelBuffer(pixels, w, h, 0, 0, 640, 336);
+</code></pre><h3 id="lower-level-fire-module">Lower-level fire module</h3><p>If you want the raw fire module directly:</p><pre><code class="language-cpp">Fire_Initialize(320, 168, 36, 3, 0, 255);
+Fire_Update();
+const unsigned int* pixels = Fire_GetBuffer();
+</code></pre><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-important-caveats-discovered-in-the-code"><h2 id="important-caveats-discovered-in-the-code">Important caveats discovered in the code</h2><p>These are source-accurate notes that matter when you build on r0.2.</p><h3 id="1-onexit-exists-in-scenes-but-is-not-currently-called">1. <code>onExit</code> exists in scenes, but is not currently called</h3><p><code>IXSceneCallbacks</code> contains <code>onExit</code>, but <code>scene.cpp</code> never invokes it when switching scenes.</p><p>So today:</p><ul>
+<li><code>onEnter</code> is used</li>
+<li><code>onExit</code> is defined but not wired yet</li>
+</ul><p>If you need cleanup, do it another way for now.</p><h3 id="2-scene-render-already-owns-the-frame">2. Scene render already owns the frame</h3><p>Inside normal scenes, <code>Scene_Render()</code> calls <code>Renderer_BeginFrame()</code> and <code>Renderer_EndFrame()</code> for you.</p><p>Do <strong>not</strong> begin/end a second frame inside your scene’s <code>render()</code> callback.</p><h3 id="3-audio-paths-and-video-paths-are-not-handled-the-same-way">3. Audio paths and video paths are not handled the same way</h3><ul>
+<li><code>MediaAudio_MusicPlay("music/theme.ogg", ...)</code> → path is resolved through the assets system</li>
+<li><code>VideoPlayer_Open("assets/video/test.mpg")</code> → path is used directly</li>
+</ul><p>So audio takes a path relative to <code>assets</code>, while video expects the actual file path string you provide.</p><h3 id="4-two-public-image-modules-share-the-same-names">4. Two public image modules share the same names</h3><p>Both <code>engine/media/image.h</code> and <code>engine/interface/image.h</code> define:</p><ul>
+<li><code>IXImage</code></li>
+<li><code>Image_Initialize</code></li>
+<li><code>Image_Shutdown</code></li>
+<li><code>Image_Release</code></li>
+<li><code>Image_GetLastError</code></li>
+</ul><p>Do not include both together.</p><h3 id="5-buttons-and-sliders-are-manual">5. Buttons and sliders are manual</h3><p>The engine does not automatically update widgets for you.</p><p>You must:</p><ul>
+<li>call <code>Button_Handle()</code> / <code>Slider_Handle()</code> in update</li>
+<li>call <code>GUI_DrawButton()</code> / <code>GUI_DrawSlider()</code> in render</li>
+</ul><h3 id="6-tilemap-collision-is-post-move-resolution">6. Tilemap collision is post-move resolution</h3><p>The intended order is:</p><pre><code class="language-cpp">Entity_Update(&amp;player, dt);
+Tilemap_ResolveCollision(&amp;map, &amp;player);
+</code></pre><h3 id="7-gui_drawtextline-uses-a-default-argument">7. <code>GUI_DrawTextLine</code> uses a default argument</h3><p><code>GUI_DrawTextLine(int x, int y, const char* text, unsigned int color = 0xFFFFFFFF);</code></p><p>That default argument means this header is effectively written for C++ compilation, which matches the rest of the project.</p><hr/><p class="section-top-link"><a href="#top">Back to top</a></p></section><section class="doc-section-card" id="section-public-api-reference"><h2 id="public-api-reference">Public API reference</h2><p>Below is a straight source-based signature index of the public headers shipped in r0.2.</p><h3 id="enginecoreengineh"><code>engine/core/engine.h</code></h3><pre><code class="language-cpp">bool Engine_Initialize(HWND hWnd);
+void Engine_Shutdown();
+void Engine_HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+void Engine_RunFrame();
+</code></pre><h3 id="enginecorevideoh"><code>engine/core/video.h</code></h3><pre><code class="language-cpp">void Video_Initialize(HWND hWnd);
+void Video_SetFullscreen(int fullscreen);
+void Video_SetResolution(int width, int height);
+void Video_SetVSync(int vsync);
+void Video_LockResize(int locked);
+void Video_SetMinSize(int minWidth, int minHeight);
+int Video_Apply();
+int Video_IsFullscreen();
+int Video_IsVSync();
+int Video_IsResizeLocked();
+void Video_GetResolution(int* width, int* height);
+int Video_GetAvailableModes(IXVideoMode* outModes, int maxCount);
+void Video_HandleGetMinMaxInfo(LPARAM lParam);
+void Video_HandleSizing(WPARAM wParam, LPARAM lParam);
+</code></pre><h3 id="enginecoresplashscreenh"><code>engine/core/splashscreen.h</code></h3><pre><code class="language-cpp">void Splashscreen_Show(HWND hWnd, const char* imagePath, float durationSeconds);
+void Splashscreen_ShowEx(HWND hWnd, const char* imagePath, float durationSeconds, float fadeInSeconds, float fadeOutSeconds, unsigned int bgColor, int skipFadeOnExit);
+</code></pre><h3 id="enginecoresceneh"><code>engine/core/scene.h</code></h3><pre><code class="language-cpp">int  Scene_Register(int sceneId, IXSceneCallbacks callbacks);
+void Scene_RegisterDebugScenes();
+void Scene_SetCurrent(int sceneId);
+int  Scene_GetCurrent();
+void Scene_RequestChange(int sceneId);
+int  Scene_HasPendingChange();
+int  Scene_ConsumePendingChange();
+void Scene_Initialize();
+void Scene_OnEnterCurrent();
+void Scene_InvalidateLayout();
+void Scene_HandleMouseMove(int x, int y);
+void Scene_BeginMouseDrag(int x, int y);
+void Scene_EndMouseDrag();
+void Scene_HandleKeyDown(WPARAM key);
+void Scene_Update();
+void Scene_Render();
+</code></pre><h3 id="enginecoreinputh"><code>engine/core/input.h</code></h3><pre><code class="language-cpp">void Input_Initialize();
+void Input_BeginFrame();
+void Input_HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam);
+int Input_GetMouseX();
+int Input_GetMouseY();
+int Input_GetMouseWheelDelta();
+int Input_IsMouseButtonDown(int button);
+int Input_WasMouseButtonPressed(int button);
+int Input_WasMouseButtonReleased(int button);
+int Input_IsKeyDown(int vk);
+int Input_WasKeyPressed(int vk);
+int Input_WasKeyReleased(int vk);
+int Input_GetLastPressedKey();
+int Input_GetLastReleasedKey();
+const char* Input_KeyToString(int vk);
+</code></pre><h3 id="enginecoregamepadh"><code>engine/core/gamepad.h</code></h3><pre><code class="language-cpp">void Gamepad_Initialize();
+void Gamepad_Update();
+void Gamepad_Shutdown();
+int   Gamepad_IsConnected(int index);
+int   Gamepad_IsButtonDown     (int index, unsigned int button);
+int   Gamepad_WasButtonPressed (int index, unsigned int button);
+int   Gamepad_WasButtonReleased(int index, unsigned int button);
+float Gamepad_GetAxis          (int index, int axis);
+int   Gamepad_IsTriggerDown    (int index, int axis);
+int   Gamepad_WasTriggerPressed (int index, int axis);
+int   Gamepad_WasTriggerReleased(int index, int axis);
+void  Gamepad_SetVibration(int index, float leftMotor, float rightMotor);
+void  Gamepad_StopVibration(int index);
+void  Gamepad_SetDeadZone(int index, float deadZone);
+float Gamepad_GetDeadZone(int index);
+int         Gamepad_GetConnectedCount();
+const char* Gamepad_ButtonToString(unsigned int button);
+const char* Gamepad_AxisToString(int axis);
+</code></pre><h3 id="enginecoretimerh"><code>engine/core/timer.h</code></h3><pre><code class="language-cpp">void Timer_Initialize();
+void Timer_BeginFrame();
+void Timer_EndFrame();
+void Timer_AddSimulationSteps(unsigned int steps);
+float Timer_GetDeltaSeconds();
+float Timer_GetDeltaMilliseconds();
+float Timer_GetSmoothedFrameMilliseconds();
+float Timer_GetRenderFPS();
+float Timer_GetSimUPS();
+double Timer_GetTotalSeconds();
+unsigned int Timer_GetFrameCount();
+unsigned int Timer_GetFrameSimulationSteps();
+</code></pre><h3 id="enginecorecamerah"><code>engine/core/camera.h</code></h3><pre><code class="language-cpp">void Camera_Init(IXCamera* cam);
+void Camera_SetPosition(IXCamera* cam, float x, float y);
+void Camera_SetZoom(IXCamera* cam, float zoom);
+void Camera_SetWorldBounds(IXCamera* cam, float x, float y, float w, float h);
+void Camera_SetFollowLerp(IXCamera* cam, float lerp);
+void Camera_Follow(IXCamera* cam, float targetX, float targetY, float deltaSeconds);
+void Camera_CenterOn(IXCamera* cam, float targetX, float targetY);
+void Camera_Update(IXCamera* cam, float deltaSeconds);
+void Camera_Shake(IXCamera* cam, float intensity, float duration);
+void Camera_WorldToScreen(const IXCamera* cam, float worldX, float worldY, int* screenX, int* screenY);
+void Camera_ScreenToWorld(const IXCamera* cam, int screenX, int screenY, float* worldX, float* worldY);
+int Camera_IsVisible(const IXCamera* cam, float worldX, float worldY, int w, int h);
+void Camera_Attach(IXCamera* cam);
+void Camera_Detach();
+IXCamera* Camera_GetActive();
+</code></pre><h3 id="enginecoreentityh"><code>engine/core/entity.h</code></h3><pre><code class="language-cpp">void Entity_Init(IXEntity* e, float x, float y, int w, int h);
+void Entity_SetTexture(IXEntity* e, IDirect3DTexture9* texture);
+void Entity_SetSpriteFrame(IXEntity* e, int srcX, int srcY, int srcW, int srcH);
+void Entity_SetPosition(IXEntity* e, float x, float y);
+void Entity_SetVelocity(IXEntity* e, float vx, float vy);
+void Entity_SetSize(IXEntity* e, int w, int h);
+void Entity_SetTint(IXEntity* e, unsigned int tint);
+void Entity_SetActive(IXEntity* e, int active);
+void Entity_SetVisible(IXEntity* e, int visible);
+void Entity_GetBounds(const IXEntity* e, int* x, int* y, int* w, int* h);
+void Entity_Update(IXEntity* e, float deltaSeconds);
+int  Entity_Overlaps(const IXEntity* a, const IXEntity* b);
+int  Entity_OverlapsCircle(const IXEntity* a, const IXEntity* b);
+int  Entity_ContainsPoint(const IXEntity* e, float px, float py);
+int  Entity_RayHit(const IXEntity* e, float ox, float oy, float dx, float dy, float maxLen, float* tHit);
+void Entity_Render(const IXEntity* e);
+void EntityList_Init(IXEntityList* list, IXEntity* buffer, int capacity);
+int  EntityList_Add(IXEntityList* list);
+void EntityList_Remove(IXEntityList* list, int index);
+void EntityList_Clear(IXEntityList* list);
+void EntityList_UpdateAll(IXEntityList* list, float deltaSeconds);
+void EntityList_RenderAll(const IXEntityList* list);
+int  EntityList_GetCount(const IXEntityList* list);
+</code></pre><h3 id="enginecoretilemaph"><code>engine/core/tilemap.h</code></h3><pre><code class="language-cpp">void Tilemap_Init(IXTilemap* map, int cols, int rows, int tileW, int tileH);
+void Tilemap_SetTileColor(IXTilemap* map, unsigned char type, unsigned int color);
+void Tilemap_SetSolid(IXTilemap* map, unsigned char type, int solid);
+void          Tilemap_SetTile(IXTilemap* map, int col, int row, unsigned char type);
+unsigned char Tilemap_GetTile(const IXTilemap* map, int col, int row);
+void Tilemap_Fill(IXTilemap* map, int col, int row, int cols, int rows, unsigned char type);
+void Tilemap_Clear(IXTilemap* map);
+int Tilemap_GetWorldWidth(const IXTilemap* map);
+int Tilemap_GetWorldHeight(const IXTilemap* map);
+void Tilemap_WorldToTile(const IXTilemap* map, float worldX, float worldY, int* col, int* row);
+int Tilemap_IsSolid(const IXTilemap* map, int col, int row);
+int Tilemap_OverlapsSolid(const IXTilemap* map, float x, float y, int w, int h);
+void Tilemap_Render(const IXTilemap* map);
+void Tilemap_ResolveCollision(const IXTilemap* map, IXEntity* entity);
+</code></pre><h3 id="enginecoreanimationh"><code>engine/core/animation.h</code></h3><pre><code class="language-cpp">void Animation_Init(IXAnimation* anim, struct IDirect3DTexture9* texture, int frameW, int frameH);
+void Animation_SetTexture(IXAnimation* anim, struct IDirect3DTexture9* texture);
+int Animation_AddClip(IXAnimation* anim, const char*  name, int          firstFrame, int          frameCount, float        fps, int          loop);
+int  Animation_Play(IXAnimation* anim, const char* clipName);
+void Animation_Restart(IXAnimation* anim);
+void Animation_Pause(IXAnimation* anim);
+void Animation_Resume(IXAnimation* anim);
+void Animation_SetOnClipEnd(IXAnimation* anim, IXAnimationCallback cb);
+const char* Animation_GetCurrentClipName(const IXAnimation* anim);
+int         Animation_GetCurrentFrame(const IXAnimation* anim);
+int         Animation_IsPaused(const IXAnimation* anim);
+void Animation_Update(IXAnimation* anim, float deltaSeconds);
+void Animation_Render(const IXAnimation* anim, int dstX, int dstY, int dstW, int dstH, unsigned int tint);
+void Animation_ApplyToEntity(const IXAnimation* anim, struct IXEntity* entity);
+</code></pre><h3 id="enginecoreparticlesh"><code>engine/core/particles.h</code></h3><pre><code class="language-cpp">void Emitter_Init(IXEmitter* e, IXParticle* buffer, int capacity);
+void Emitter_SetPosition(IXEmitter* e, float x, float y);
+void Emitter_SetSpread(IXEmitter* e, float spreadX, float spreadY);
+void Emitter_SetSpawnRate(IXEmitter* e, float particlesPerSecond);
+void Emitter_SetLifetime(IXEmitter* e, float minSec, float maxSec);
+void Emitter_SetVelocity(IXEmitter* e, float vxMin, float vxMax, float vyMin, float vyMax);
+void Emitter_SetGravity(IXEmitter* e, float ax, float ay);
+void Emitter_SetSize(IXEmitter* e, int sizeStart, int sizeEnd);
+void Emitter_SetColorOverLife(IXEmitter* e, unsigned int colorStart, unsigned int colorEnd);
+void Emitter_SetTexture(IXEmitter* e, IDirect3DTexture9* texture, int frameW, int frameH);
+void Emitter_Burst(IXEmitter* e, int count);
+void Emitter_Stop(IXEmitter* e);
+void Emitter_Reset(IXEmitter* e);
+void Emitter_Pause(IXEmitter* e);
+void Emitter_Resume(IXEmitter* e);
+void Emitter_Update(IXEmitter* e, float deltaSeconds);
+void Emitter_Render(const IXEmitter* e);
+int Emitter_GetActiveCount(const IXEmitter* e);
+</code></pre><h3 id="enginecoresaveloadh"><code>engine/core/saveload.h</code></h3><pre><code class="language-cpp">void SaveLoad_SetBasePath(int root, const char* subdir);
+void SaveLoad_SetBasePathAbsolute(const char* absolutePath);
+const char* SaveLoad_GetBasePath();
+IXSaveWriter* SaveLoad_WriterCreate(unsigned int version);
+void SaveLoad_WriterPutBytes(IXSaveWriter* w, const char* key, const void* data, unsigned int len);
+void SaveLoad_WriterPutInt  (IXSaveWriter* w, const char* key, int value);
+void SaveLoad_WriterPutFloat(IXSaveWriter* w, const char* key, float value);
+void SaveLoad_WriterPutStr  (IXSaveWriter* w, const char* key, const char* str);
+int  SaveLoad_WriterSave(IXSaveWriter* w, const char* filename);
+void SaveLoad_WriterDestroy(IXSaveWriter* w);
+IXSaveReader* SaveLoad_ReaderOpen(const char* filename);
+unsigned int SaveLoad_ReaderGetVersion(IXSaveReader* r);
+unsigned int SaveLoad_ReaderGetCount(IXSaveReader* r);
+const void*  SaveLoad_ReaderGetBytes(IXSaveReader* r, const char* key, unsigned int* outLen);
+int         SaveLoad_ReaderGetInt  (IXSaveReader* r, const char* key);
+float       SaveLoad_ReaderGetFloat(IXSaveReader* r, const char* key);
+int         SaveLoad_ReaderGetStr  (IXSaveReader* r, const char* key, char* buf, unsigned int bufLen);
+void SaveLoad_ReaderDestroy(IXSaveReader* r);
+int SaveLoad_FileExists(const char* filename);
+int SaveLoad_FileDelete(const char* filename);
+</code></pre><h3 id="enginecorerandomh"><code>engine/core/random.h</code></h3><pre><code class="language-cpp">static inline void Rng_Seed(IXRng* rng, unsigned int seed);
+static inline unsigned int Rng_NextU32(IXRng* rng);
+static inline float Rng_NextFloat01(IXRng* rng);
+static inline float Rng_Float(IXRng* rng, float lo, float hi);
+static inline int Rng_Int(IXRng* rng, int lo, int hi);
+static inline int Rng_Chance(IXRng* rng, float p);
+static inline int Rng_Bool(IXRng* rng);
+static inline int Rng_Sign(IXRng* rng);
+static inline float Rng_FloatSigned(IXRng* rng);
+static inline int Rng_Index(IXRng* rng, int count);
+static inline void Rng_ShuffleInts(IXRng* rng, int* arr, int count);
+static inline void Rng_SeedFromTime(IXRng* rng);
+Rng_Seed(rng, (unsigned int)time(NULL));
+</code></pre><h3 id="enginecoremath2dh"><code>engine/core/math2d.h</code></h3><pre><code class="language-cpp">static inline IXVec2 Vec2(float x, float y);
+static inline IXVec2 Vec2_Zero();
+static inline IXVec2 Vec2_One();
+static inline IXVec2 Vec2_Up();
+static inline IXVec2 Vec2_Down();
+static inline IXVec2 Vec2_Left();
+static inline IXVec2 Vec2_Right();
+static inline IXVec2 Vec2_Add(IXVec2 a, IXVec2 b);
+static inline IXVec2 Vec2_Sub(IXVec2 a, IXVec2 b);
+static inline IXVec2 Vec2_Scale(IXVec2 v, float s);
+static inline IXVec2 Vec2_Neg(IXVec2 v);
+static inline IXVec2 Vec2_Mul(IXVec2 a, IXVec2 b);
+static inline float  Vec2_LengthSq(IXVec2 v);
+static inline float  Vec2_Length(IXVec2 v);
+static inline IXVec2 Vec2_Normalize(IXVec2 v);
+static inline float  Vec2_Dot(IXVec2 a, IXVec2 b);
+static inline float  Vec2_Cross(IXVec2 a, IXVec2 b);
+static inline float  Vec2_Dist(IXVec2 a, IXVec2 b);
+static inline float  Vec2_DistSq(IXVec2 a, IXVec2 b);
+static inline float  Vec2_Angle(IXVec2 v);
+static inline float  Vec2_AngleBetween(IXVec2 a, IXVec2 b);
+static inline IXVec2 Vec2_FromAngle(float radians, float length);
+static inline IXVec2 Vec2_Rotate(IXVec2 v, float radians);
+static inline IXVec2 Vec2_RotateAround(IXVec2 point, IXVec2 pivot, float radians);
+static inline IXVec2 Vec2_Reflect(IXVec2 v, IXVec2 normal);
+static inline IXVec2 Vec2_Perp(IXVec2 v);
+static inline IXVec2 Vec2_Lerp(IXVec2 a, IXVec2 b, float t);
+static inline IXVec2 Vec2_MoveTowards(IXVec2 current, IXVec2 target, float maxDist);
+static inline IXVec2 Vec2_ClampLength(IXVec2 v, float maxLength);
+static inline float IX_Lerp(float a, float b, float t);
+static inline float IX_Clamp(float v, float lo, float hi);
+static inline float IX_Clamp01(float v);
+static inline float IX_Abs(float v);
+static inline float IX_Sign(float v);
+static inline float IX_Min(float a, float b);
+static inline float IX_Max(float a, float b);
+static inline float IX_Min3(float a, float b, float c);
+static inline float IX_Max3(float a, float b, float c);
+static inline float IX_Wrap(float v, float lo, float hi);
+static inline float IX_WrapAngle(float radians);
+static inline float IX_SmoothStep(float t);
+static inline float IX_SmoothLerp(float a, float b, float t);
+static inline float IX_MoveTowards(float v, float target, float maxStep);
+static inline int IX_OverlapAABB(float ax, float ay, float aw, float ah, float bx, float by, float bw, float bh);
+static inline int IX_OverlapCircle(float ax, float ay, float ar, float bx, float by, float br);
+static inline int IX_PointInAABB(float px, float py, float rx, float ry, float rw, float rh);
+static inline int IX_PointInCircle(float px, float py, float cx, float cy, float cr);
+static inline int IX_RayAABB(float ox, float oy, float dx, float dy, float maxLen, float rx, float ry, float rw, float rh, float* tHit);
+</code></pre><h3 id="enginecoreassetsh"><code>engine/core/assets.h</code></h3><pre><code class="language-cpp">int Assets_Initialize();
+void Assets_Shutdown();
+void Assets_SetBasePath(const char* basePath);
+const char* Assets_GetBasePath();
+const char* Assets_GetAssetsRoot();
+const char* Assets_GetImagesRoot();
+const char* Assets_GetAudioRoot();
+int Assets_BuildPath(const char* relativePath, char* outPath, int outPathSize);
+int Assets_BuildImagePath(const char* fileName, char* outPath, int outPathSize);
+int Assets_BuildAudioPath(const char* fileName, char* outPath, int outPathSize);
+int Assets_FileExists(const char* fullPath);
+int Assets_ImageExists(const char* fileName);
+int Assets_AudioExists(const char* fileName);
+</code></pre><h3 id="enginecoretransitionh"><code>engine/core/transition.h</code></h3><pre><code class="language-cpp">void Transition_Request(int toScene, int type, float durationSeconds, unsigned int color);
+void Transition_FadeBlack(int toScene, float durationSeconds);
+void Transition_FadeWhite(int toScene, float durationSeconds);
+int  Transition_IsActive();
+void Transition_Update(float deltaSeconds);
+void Transition_DrawOverlay(int screenWidth, int screenHeight);
+</code></pre><h3 id="enginerendererh"><code>engine/renderer.h</code></h3><pre><code class="language-cpp">bool Renderer_Initialize(HWND hWnd);
+void Renderer_HandleResize(int width, int height);
+void Renderer_Cleanup();
+void              Renderer_GetClientSize(int* width, int* height);
+void              Renderer_GetOverlayContentRect(int* x, int* y, int* width, int* height);
+void              Renderer_GetOverlayButtonsRect(int* x, int* y, int* width, int* height);
+IDirect3DDevice9* Renderer_GetDevice();
+void Renderer_SetDisplayImage(IDirect3DTexture9* texture, int width, int height);
+void Renderer_ClearDisplayImage();
+bool Renderer_LoadBackgroundImage(const char* path);
+void Renderer_ClearBackgroundImage();
+void Renderer_BeginFrame();
+void Renderer_DrawPixelBuffer(const unsigned int* pixels, int srcWidth,  int srcHeight, int dstX,      int dstY, int dstWidth,  int dstHeight);
+void Renderer_DrawSprite(IDirect3DTexture9* texture, int srcX, int srcY, int srcW, int srcH, int dstX, int dstY, int dstW, int dstH, unsigned int tint);
+void Renderer_EndFrame();
+void Renderer_SetOverlayText(const char* title, const char* subtitle, const char* statusLine);
+void Renderer_SetOverlayMetrics(float renderFps, float frameMs, float simUps);
+void Renderer_SetControlButton(const IXButton* button);
+void Renderer_SetControlButtons(const IXButton** buttons, int count);
+void Renderer_SetControlSliders(const IXSlider** sliders, int count);
+void Renderer_SetDisplayOptions(int showFPS, int showHelp, int drawBackgroundGrid);
+void Renderer_SetBackgroundColor(unsigned int argb);
+void Renderer_SetHelpText(const char* helpText);
+void Renderer_SetOverlayEnabled(int enabled);
+void Renderer_SetVSync(int vsync);
+</code></pre><h3 id="engineguih"><code>engine/gui.h</code></h3><pre><code class="language-cpp">bool GUI_Initialize();
+bool GUI_InternalCreate(IDirect3DDevice9* device);
+void GUI_BeginFrame();
+void GUI_EndFrame();
+void GUI_Cleanup();
+void GUI_DrawTextEx(int x, int y, int width, int height, const char* text, unsigned int color, int alignment, int fontSize, int bold, int wrap);
+void GUI_DrawWorldText(float worldX, float worldY, const char* text, unsigned int color, float anchorX, float anchorY, int alignment, int fontSize, int bold);
+void GUI_DrawFilledRect(int x, int y, int width, int height, unsigned int color);
+void GUI_DrawOutlinedRect(int x, int y, int width, int height, unsigned int color);
+void GUI_DrawGradientRect(int x, int y, int width, int height, unsigned int colorTop, unsigned int colorBottom);
+void GUI_DrawChamferRect(int x, int y, int width, int height, int radius, unsigned int color);
+void GUI_DrawChamferGradientRect(int x, int y, int width, int height, int radius, unsigned int colorTop, unsigned int colorBottom);
+void GUI_DrawChamferOutline(int x, int y, int width, int height, int radius, int strokeWidth, unsigned int color);
+void GUI_DrawSprite(IDirect3DTexture9* texture, int srcX, int srcY, int srcW, int srcH, int dstX, int dstY, int dstW, int dstH, unsigned int tint);
+void GUI_DrawButton(const IXButton* button);
+void GUI_DrawSlider(const IXSlider* slider);
+void GUI_DrawPanel(const IXPanel* panel);
+void GUI_DrawLabel(const IXLabel* label);
+</code></pre><h3 id="engineinterfacebuttonh"><code>engine/interface/button.h</code></h3><pre><code class="language-cpp">void Button_Init(IXButton* button, int x, int y, int width, int height, const char* text);
+void Button_SetText(IXButton* button, const char* text);
+void Button_SetTooltip(IXButton* button, const char* tooltip);
+void Button_SetBounds(IXButton* button, int x, int y, int width, int height);
+void Button_SetCornerRadius(IXButton* button, int radius);
+void Button_SetEnabled(IXButton* button, int enabled);
+void Button_SetFont(IXButton* button, int fontSize, int bold);
+void Button_SetTextPressOffset(IXButton* button, int dx, int dy);
+void Button_SetColors(IXButton* button, unsigned int normal, unsigned int hover, unsigned int pressed);
+void Button_SetGradients(IXButton* button, unsigned int topNormal,  unsigned int botNormal, unsigned int topHover,   unsigned int botHover, unsigned int topPressed, unsigned int botPressed);
+void Button_SetStroke(IXButton* button, unsigned int color, int width);
+void Button_SetTextColors(IXButton* button, unsigned int normal, unsigned int hover, unsigned int pressed);
+void Button_SetSprite(IXButton* button, IDirect3DTexture9* texture);
+void Button_SetSpriteFrame(IXButton* button, int state, int srcX, int srcY, int srcW, int srcH);
+void Button_SetSpriteStrip(IXButton* button, IDirect3DTexture9* texture, int frameW, int frameH);
+int               Button_IsInside(const IXButton* button, int mouseX, int mouseY);
+int               Button_Handle(IXButton* button, int mouseX, int mouseY, int mouseDown, int mouseReleased);
+const IXButtonStyle* Button_GetCurrentStyle(const IXButton* button);
+</code></pre><h3 id="engineinterfacelabelh"><code>engine/interface/label.h</code></h3><pre><code class="language-cpp">void Label_Init(IXLabel* label, int x, int y, int width, int height, const char* text);
+void Label_SetText(IXLabel* label, const char* text);
+void Label_SetBounds(IXLabel* label, int x, int y, int width, int height);
+void Label_SetFontSize(IXLabel* label, int fontSize);
+void Label_SetBold(IXLabel* label, int bold);
+void Label_SetAlignment(IXLabel* label, int alignment);
+void Label_SetTextColor(IXLabel* label, unsigned int color);
+void Label_EnableShadow(IXLabel* label, int enabled);
+void Label_SetShadowColor(IXLabel* label, unsigned int color);
+void Label_SetWrap(IXLabel* label, int wrap);
+void Label_SetBackground(IXLabel* label, unsigned int color, int padding);
+void Label_SetBackgroundGradient(IXLabel* label, unsigned int top, unsigned int bottom, int padding);
+void Label_SetBackgroundSprite(IXLabel* label, IDirect3DTexture9* texture, unsigned int tint, int padding);
+void Label_SetBorder(IXLabel* label, unsigned int color);
+void Label_SetStrokeWidth(IXLabel* label, int width);
+void Label_SetCornerRadius(IXLabel* label, int radius);
+int Label_IsInside(const IXLabel* label, int pointX, int pointY);
+</code></pre><h3 id="engineinterfacepanelh"><code>engine/interface/panel.h</code></h3><pre><code class="language-cpp">void Panel_Init(IXPanel* panel, int x, int y, int width, int height, const char* title);
+void Panel_SetTitle(IXPanel* panel, const char* title);
+void Panel_SetBounds(IXPanel* panel, int x, int y, int width, int height);
+int  Panel_IsInside(const IXPanel* panel, int pointX, int pointY);
+void Panel_SetBackground(IXPanel* panel, unsigned int color);
+void Panel_SetBodyGradient(IXPanel* panel, unsigned int top, unsigned int bottom);
+void Panel_SetBodySprite(IXPanel* panel, IDirect3DTexture9* texture, unsigned int tint);
+void Panel_SetHeaderColor(IXPanel* panel, unsigned int color);
+void Panel_SetHeaderGradient(IXPanel* panel, unsigned int top, unsigned int bottom);
+void Panel_SetHeaderHeight(IXPanel* panel, int height);
+void Panel_SetTitleFont(IXPanel* panel, int fontSize, int bold, int alignment);
+void Panel_SetTitleColor(IXPanel* panel, unsigned int color);
+void Panel_SetBorderStyle(IXPanel* panel, unsigned int color, int strokeWidth);
+void Panel_SetCornerRadius(IXPanel* panel, int radius);
+</code></pre><h3 id="engineinterfacesliderh"><code>engine/interface/slider.h</code></h3><pre><code class="language-cpp">void Slider_Init(IXSlider* slider, int x, int y, int width, int height, int minValue, int maxValue, int value, const char* label);
+void Slider_SetLabel(IXSlider* slider, const char* label);
+void Slider_SetBounds(IXSlider* slider, int x, int y, int width, int height);
+void Slider_SetValue(IXSlider* slider, int value);
+int  Slider_GetValue(const IXSlider* slider);
+int  Slider_IsInside(const IXSlider* slider, int mouseX, int mouseY);
+int  Slider_Handle(IXSlider* slider, int mouseX, int mouseY, int mouseDown);
+void Slider_SetTrackStyle(IXSlider* slider, unsigned int trackColor, unsigned int fillColor, int height, int radius);
+void Slider_SetTrackInset(IXSlider* slider, unsigned int insetColor);
+void Slider_SetKnobStyle(IXSlider* slider, unsigned int color, unsigned int gradTop, unsigned int gradBottom, int width, int height, int radius);
+void Slider_SetKnobStroke(IXSlider* slider, unsigned int color, int strokeWidth);
+void Slider_SetKnobSprite(IXSlider* slider, IDirect3DTexture9* texture);
+void Slider_SetValueStyle(IXSlider* slider, unsigned int valueColor, int valueFontSize);
+void Slider_SetLabelFontSize(IXSlider* slider, int fontSize);
+void Slider_ShowValue(IXSlider* slider, int show);
+</code></pre><h3 id="engineinterfacelayouth"><code>engine/interface/layout.h</code></h3><pre><code class="language-cpp">void Layout_BeginVertical(IXLayout* layout, int x, int y, int width, int height, int spacing);
+void Layout_SetPadding(IXLayout* layout, int padding);
+void Layout_Reset(IXLayout* layout);
+void Layout_GetContentRect(const IXLayout* layout, int* x, int* y, int* width, int* height);
+void Layout_Next(IXLayout* layout, int itemHeight, int* x, int* y, int* width, int* height);
+void Layout_Skip(IXLayout* layout, int amount);
+int  Layout_GetCursorY(const IXLayout* layout);
+</code></pre><h3 id="engineinterfaceimageh"><code>engine/interface/image.h</code></h3><pre><code class="language-cpp">bool Image_Initialize();
+void Image_Shutdown();
+bool Image_LoadFromFile(IDirect3DDevice9* device, const char* path, IXImage* outImage);
+void Image_Release(IXImage* image);
+const char* Image_GetLastError();
+</code></pre><h3 id="enginemediaaudioh"><code>engine/media/audio.h</code></h3><pre><code class="language-cpp">int  MediaAudio_Initialize(HWND hWnd);
+void MediaAudio_Shutdown();
+int  MediaAudio_MusicPlay(const char* relativeAssetPath, int loop);
+void MediaAudio_MusicStop();
+void MediaAudio_MusicPause();
+void MediaAudio_MusicResume();
+float MediaAudio_MusicGetVolume();
+int  MediaAudio_MusicIsPlaying();
+int  MediaAudio_MusicIsPaused();
+int  MediaAudio_SFXPlay(const char* relativeAssetPath, float volume);
+float MediaAudio_SFXGetMasterVolume();
+const char* MediaAudio_GetLastError();
+const char* MediaAudio_GetLastResolvedPath();
+int  MediaAudio_PlayFile(const char* relativeAssetPath, int loop);
+int  MediaAudio_PlayDemoWAV(int loop);
+void MediaAudio_Stop();
+void MediaAudio_Pause();
+void MediaAudio_Resume();
+int  MediaAudio_IsPaused();
+int  MediaAudio_HasActiveFile();
+</code></pre><h3 id="enginemediaimageh"><code>engine/media/image.h</code></h3><pre><code class="language-cpp">int  Image_Initialize();
+void Image_Shutdown();
+int  Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage);
+void Image_Release(IXImage* image);
+int  Image_IsLoaded(const IXImage* image);
+int  Image_GetWidth(const IXImage* image);
+int  Image_GetHeight(const IXImage* image);
+const char* Image_GetPath(const IXImage* image);
+const char* Image_GetLastError();
+</code></pre><h3 id="enginemediavideo_playerh"><code>engine/media/video_player.h</code></h3><pre><code class="language-cpp">int  VideoPlayer_Open(const char* path);
+void VideoPlayer_Close();
+void VideoPlayer_Play();
+void VideoPlayer_Pause();
+void VideoPlayer_SetLoop(int loop);
+void VideoPlayer_Update(float deltaSeconds);
+void VideoPlayer_Render(int x, int y, int w, int h);
+void VideoPlayer_RenderFit(int x, int y, int w, int h, unsigned int fillColor);
+int   VideoPlayer_IsOpen();
+int   VideoPlayer_IsPlaying();
+int   VideoPlayer_IsPaused();
+int   VideoPlayer_IsFinished();
+int   VideoPlayer_GetVideoWidth();
+int   VideoPlayer_GetVideoHeight();
+float VideoPlayer_GetVolume();
+void VideoPlayer_PlayBlocking(HWND hWnd, const char* path, int loop, int hideOverlay);
+const char* VideoPlayer_GetLastError();
+</code></pre><h3 id="engineeffectseffecth"><code>engine/effects/effect.h</code></h3><pre><code class="language-cpp">void Effect_InitializeFire(const FireSettings&amp; settings);
+void Effect_ResetFire();
+void Effect_UpdateFire();
+void Effect_SetFireSpeed(int milliseconds);
+int  Effect_GetFireSpeed();
+void Effect_SetFireWind(int windStrength);
+int  Effect_GetFireWind();
+void Effect_SetFireBaseIntensity(int intensity);
+int  Effect_GetFireBaseIntensity();
+void Effect_SetFireDecay(int maxDecay);
+int  Effect_GetFireDecay();
+void Effect_SetFireBlur(int blurAmount);
+int  Effect_GetFireBlur();
+void Effect_SetFireSize(int width, int height);
+const FireSettings&amp; Effect_GetFireSettings();
+const unsigned int* Effect_GetFireBuffer();
+int Effect_GetFireWidth();
+int Effect_GetFireHeight();
+</code></pre><h3 id="engineeffectsfireh"><code>engine/effects/fire.h</code></h3><pre><code class="language-cpp">void Fire_Initialize(int width, int height, int paletteSize, int maxDecay, int windStrength, int baseIntensity);
+void Fire_Update();
+void Fire_SetWind(int windStrength);
+void Fire_SetBaseIntensity(int intensity);
+void Fire_SetDecay(int maxDecay);
+void Fire_SetBlur(int blurAmount);
+const unsigned int* Fire_GetBuffer();
+int Fire_GetWidth();
+int Fire_GetHeight();
+</code></pre><p class="section-top-link"><a href="#top">Back to top</a></p></section></article>
+</section>
+</main>
+<footer class="site-footer">
+<div>InteractiveX r0.2</div>
+<div>GNU GPL v3</div>
+</footer>
+</div>
+<script>
+(function () {
+  const links = Array.from(document.querySelectorAll('.docs-nav-list a[data-target]'));
+  const panels = Array.from(document.querySelectorAll('.doc-intro-card, .doc-section-card'));
+  function showPanel(id, updateHash) {
+    let target = document.getElementById(id) || document.getElementById('section-overview');
+    panels.forEach(panel => panel.classList.toggle('is-visible', panel === target));
+    links.forEach(link => link.classList.toggle('active', link.dataset.target === target.id));
+    if (updateHash) {
+      if (history.replaceState) history.replaceState(null, '', '#' + target.id);
+      else location.hash = target.id;
+    }
+    window.scrollTo(0, 0);
+  }
+  links.forEach(link => {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      showPanel(this.dataset.target, true);
+    });
+  });
+  const start = (location.hash || '').replace('#', '');
+  if (start) showPanel(start, false);
+  else showPanel('section-overview', false);
+})();
+</script></body>
+</html>
