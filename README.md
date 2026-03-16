@@ -69,7 +69,7 @@ Current version **r0.2** includes a complete set of core systems for building **
 ### Media
 
 - Audio playback (music + SFX)
-- PNG / BMP image loading
+- PNG image loading
 - MPEG‑1 video playback with audio sync
 
 ### Interface System
