@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
+#include <cstdlib>
 
 // ---------------------------------------------------------------------------
 //  Ring buffer de PCM para sincronizar audio do video
@@ -90,6 +91,7 @@ namespace
 
     // Erro
     static char                g_lastError[256] = "VideoPlayer offline";
+    static char                g_transcodedPath[512] = "";
     static void SetError(const char* s)
     {
         snprintf(g_lastError, sizeof(g_lastError), "%s", s ? s : "Unknown");
@@ -216,6 +218,52 @@ namespace
     }
 }
 
+
+static int EndsWithIgnoreCase(const char* path, const char* ext)
+{
+    if (!path || !ext) return 0;
+    size_t lp = std::strlen(path), le = std::strlen(ext);
+    if (lp < le) return 0;
+    const char* p = path + (lp - le);
+    while (*p && *ext)
+    {
+        char a = *p++, b = *ext++;
+        if (a >= 'A' && a <= 'Z') a = (char)(a - 'A' + 'a');
+        if (b >= 'A' && b <= 'Z') b = (char)(b - 'A' + 'a');
+        if (a != b) return 0;
+    }
+    return 1;
+}
+
+
+static int TranscodeToMPEG1(const char* inputPath, const char* outputPath)
+{
+    if (!inputPath || !outputPath) return 0;
+    char cmd[1200];
+#if defined(_WIN32)
+    std::snprintf(cmd, sizeof(cmd),
+        "ffmpeg -y -i \"%s\" -c:v mpeg1video -c:a mp2 -q:v 5 \"%s\" >nul 2>nul",
+        inputPath, outputPath);
+#else
+    std::snprintf(cmd, sizeof(cmd),
+        "ffmpeg -y -i \"%s\" -c:v mpeg1video -c:a mp2 -q:v 5 \"%s\" >/dev/null 2>/dev/null",
+        inputPath, outputPath);
+#endif
+    int rc = std::system(cmd);
+    return rc == 0;
+}
+
+static int BuildTempMpgPath(const char* sourcePath, char* outPath, int outSize)
+{
+    if (!sourcePath || !outPath || outSize <= 0) return 0;
+#if defined(_WIN32)
+    std::snprintf(outPath, outSize, "%s.huhlu_temp.mpg", sourcePath);
+#else
+    std::snprintf(outPath, outSize, "%s.huhlu_temp.mpg", sourcePath);
+#endif
+    return 1;
+}
+
 // ---------------------------------------------------------------------------
 //  API publica
 // ---------------------------------------------------------------------------
@@ -277,12 +325,43 @@ int VideoPlayer_Open(const char* path)
     return 1;
 }
 
+
+int VideoPlayer_OpenMP4(const char* path)
+{
+    if (!path || !path[0]) { SetError("VideoPlayer: null path"); return 0; }
+    if (!EndsWithIgnoreCase(path, ".mp4")) { SetError("VideoPlayer: expected .mp4"); return 0; }
+    if (VideoPlayer_Open(path)) return 1;
+    char temp[512];
+    if (!BuildTempMpgPath(path, temp, sizeof(temp))) { SetError("VideoPlayer: temp path failed"); return 0; }
+    if (!TranscodeToMPEG1(path, temp)) { SetError("VideoPlayer: ffmpeg transcode failed for MP4"); return 0; }
+    std::snprintf(g_transcodedPath, sizeof(g_transcodedPath), "%s", temp);
+    if (VideoPlayer_Open(g_transcodedPath)) return 1;
+    SetError("VideoPlayer: MP4 open failed even after transcode");
+    return 0;
+}
+
+
+int VideoPlayer_OpenOGV(const char* path)
+{
+    if (!path || !path[0]) { SetError("VideoPlayer: null path"); return 0; }
+    if (!EndsWithIgnoreCase(path, ".ogv")) { SetError("VideoPlayer: expected .ogv"); return 0; }
+    if (VideoPlayer_Open(path)) return 1;
+    char temp[512];
+    if (!BuildTempMpgPath(path, temp, sizeof(temp))) { SetError("VideoPlayer: temp path failed"); return 0; }
+    if (!TranscodeToMPEG1(path, temp)) { SetError("VideoPlayer: ffmpeg transcode failed for OGV"); return 0; }
+    std::snprintf(g_transcodedPath, sizeof(g_transcodedPath), "%s", temp);
+    if (VideoPlayer_Open(g_transcodedPath)) return 1;
+    SetError("VideoPlayer: OGV open failed even after transcode");
+    return 0;
+}
+
 void VideoPlayer_Close()
 {
     if (g_plm)  { plm_destroy(g_plm); g_plm = NULL; }
     Audio_Close();
     FreeResources();
     Ring_Reset();
+    if (g_transcodedPath[0]) { std::remove(g_transcodedPath); g_transcodedPath[0] = 0; }
     g_open = g_playing = g_paused = g_finished = 0;
     g_videoTime = 0.0f;
 }

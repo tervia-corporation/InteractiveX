@@ -21,6 +21,8 @@
 #define IX_SCENE_TRANSITION_TEST 15
 #define IX_SCENE_RANDOM_TEST     16
 #define IX_SCENE_VIDEO_TEST      17
+#define IX_SCENE_HUHLU_TEST      18
+#define IX_SCENE_HUHLU_MODULES_TEST 19
 #define IX_SCENE_USER_BASE      100
 
 typedef struct IXSceneCallbacks

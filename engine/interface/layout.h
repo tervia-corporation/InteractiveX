@@ -27,6 +27,12 @@ void Layout_Next(IXLayout* layout, int itemHeight, int* x, int* y, int* width, i
 void Layout_Skip(IXLayout* layout, int amount);
 int  Layout_GetCursorY(const IXLayout* layout);
 
+void Layout_SetReferenceResolution(int width, int height);
+void Layout_SetViewportResolution(int width, int height);
+int  Layout_ScaleX(int value);
+int  Layout_ScaleY(int value);
+void Layout_BeginVerticalScaled(IXLayout* layout, int x, int y, int width, int height, int spacing);
+
 #ifdef __cplusplus
 }
 #endif

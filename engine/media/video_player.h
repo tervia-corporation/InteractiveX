@@ -51,6 +51,10 @@ extern "C" {
 // path: caminho absoluto ou relativo ao executavel.
 // Retorna 1 em sucesso, 0 em falha.
 int  VideoPlayer_Open(const char* path);
+// Entrada para MP4: valida extensao; se necessario tenta transcodificar para MPEG-1
+// usando ffmpeg e abre o temporario gerado.
+int  VideoPlayer_OpenMP4(const char* path);
+int  VideoPlayer_OpenOGV(const char* path); // mesmo fluxo com transcode via ffmpeg
 
 // Fecha e libera todos os recursos. Seguro chamar mesmo se nao aberto.
 void VideoPlayer_Close();
