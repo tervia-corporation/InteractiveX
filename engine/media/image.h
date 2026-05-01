@@ -18,6 +18,7 @@ struct IXImage
 int  Image_Initialize();
 void Image_Shutdown();
 int  Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage);
+int  Image_LoadJPG(IDirect3DDevice9* device, const char* path, IXImage* outImage);
 void Image_Release(IXImage* image);
 int  Image_IsLoaded(const IXImage* image);
 int  Image_GetWidth(const IXImage* image);

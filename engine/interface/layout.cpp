@@ -1,5 +1,45 @@
 #include "layout.h"
 
+
+static int g_refW = 1280;
+static int g_refH = 720;
+static int g_viewW = 1280;
+static int g_viewH = 720;
+
+void Layout_SetReferenceResolution(int width, int height)
+{
+    if (width > 0) g_refW = width;
+    if (height > 0) g_refH = height;
+}
+
+void Layout_SetViewportResolution(int width, int height)
+{
+    if (width > 0) g_viewW = width;
+    if (height > 0) g_viewH = height;
+}
+
+int Layout_ScaleX(int value)
+{
+    if (value <= 0 || g_refW <= 0) return value;
+    return (value * g_viewW) / g_refW;
+}
+
+int Layout_ScaleY(int value)
+{
+    if (value <= 0 || g_refH <= 0) return value;
+    return (value * g_viewH) / g_refH;
+}
+
+void Layout_BeginVerticalScaled(IXLayout* layout, int x, int y, int width, int height, int spacing)
+{
+    Layout_BeginVertical(layout,
+        Layout_ScaleX(x),
+        Layout_ScaleY(y),
+        Layout_ScaleX(width),
+        Layout_ScaleY(height),
+        Layout_ScaleY(spacing));
+}
+
 static int Layout_ClampNonNegative(int value)
 {
     return value < 0 ? 0 : value;

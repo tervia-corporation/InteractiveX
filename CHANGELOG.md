@@ -6,6 +6,25 @@ The format loosely follows **Keep a Changelog** principles.
 
 ---
 
+## [Unreleased]
+
+### Build
+
+- Added DirectX 11, DirectX 12 and Vulkan backend compile support flags and probes (`engine/renderer_dx11.*`, `engine/renderer_dx12.*`, `engine/renderer_vulkan.*`).
+- Added Linux backend gating: Linux supports Vulkan/OpenGL backends, while DirectX backends remain Windows-only.
+- Split renderer build into cleaner, per-backend switches using:
+  - `IX_RENDERER_PROFILE=DX9|DX10|DX11|DX12|VULKAN|OPENGL31|OPENGL|ALL`
+  - granular flags `IX_ENABLE_DX9`, `IX_ENABLE_DX10`, `IX_ENABLE_DX11`, `IX_ENABLE_DX12`, `IX_ENABLE_VULKAN`, `IX_ENABLE_OPENGL31`, `IX_ENABLE_OPENGL43`
+- Separated DirectX 9 probe into its own file (`engine/renderer_dx9.*`) to avoid mixing all backend choices in one place.
+- Added explicit audio helpers for MP3/OGG playback (`MediaAudio_MusicPlayMP3/OGG`, `MediaAudio_SFXPlayMP3/OGG`).
+- Added JPG loading API (`Image_LoadJPG`) alongside existing PNG loading path.
+- Added MP4/OGV transcode-open path (`VideoPlayer_OpenMP4`/`VideoPlayer_OpenOGV`) using ffmpeg to MPEG-1 temp files when direct decode is unavailable.
+- Huhlu upgraded with basic lighting model (directional, point, spot), area light and simple shadow factor; improved ASCII FBX support including UV/normal parsing and texture path extraction (`RelativeFilename`); plus IXMaterial (PBR slots), intermediate camera modes (Orbit/FPS/Free/Ortho/Perspective), FOV/exposure/gamma, `.ixs` scene format, and simple GLTF/GLB loader.
+- Expanded `.iss` style loader with responsive unit resolution (`px`, `%`, `vw`, `vh`, `rem`), positioning rules (`position`, `left`, `top`, `right`, `bottom`, `width`, `height`), color parsing, `background-image` extraction, auto layout (vertical stack), alignment, outline/border, gradients, and `height`/`weight` box sizing.
+- Added responsive/scaled layout helpers (`Layout_BeginVerticalScaled`, reference/viewport scaling API) to reduce resolution-specific UI breakage.
+
+---
+
 ## [r0.2] — 2026-03-16
 
 First public release of **InteractiveX**.

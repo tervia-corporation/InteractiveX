@@ -69,10 +69,43 @@ Current version **r0.2** includes a complete set of core systems for building **
 ### Media
 
 - Audio playback (music + SFX)
-- PNG image loading
-- MPEG‑1 video playback with audio sync
+- PNG and JPG image loading
+- MPEG‑1 (.mpg/.mpeg) playback + MP4/OGV transcoding entrypoints (via ffmpeg to MPEG-1)
 
 ### Interface System
+
+#### ISS (Interactive Style Sheet)
+
+ISS is a CSS-inspired style file for UI layout/theme rules.
+
+Supported now:
+- selectors with block syntax
+- `property: value;` declarations
+- responsive units: `px`, `%`, `vw`, `vh`, `rem`
+- positioning properties: `position`, `left`, `top`, `right`, `bottom`, `width`, `height`
+- automatic vertical stack layout + alignment: `weight`, `align-x`, `align-y`
+- outline/border: `outline-width`, `outline-color`
+- gradients: `gradient-top`, `gradient-bottom`
+- color properties via hex/name parsing (`#RRGGBB`, `#AARRGGBB`, `white`, `black`, `transparent`)
+- background image via `background-image: url(...)`
+
+Example:
+
+```iss
+#hud_panel {
+  position: center;
+  width: 40vw;
+  height: 32vh;
+}
+
+#play_button {
+  left: 6vw;
+  bottom: 8vh;
+  width: 18rem;
+  height: 3rem;
+}
+```
+
 
 InteractiveX includes a lightweight GUI system inspired by **CSS‑style customization**.
 
@@ -82,7 +115,8 @@ Components include:
 - Labels
 - Panels
 - Sliders
-- Layout system
+- Layout system (scaled/responsive helpers)
+- ISS style loader (.iss)
 
 All interface components support customizable:
 
@@ -134,6 +168,41 @@ License: MIT
 
 ---
 
+
+### Build options (renderer backend)
+
+Renderer build is now split into independent backend switches, with a profile preset for convenience:
+
+> Platform rules:
+> - **Windows**: DirectX 9/10/11/12 + Vulkan + OpenGL 3.1/4.3
+> - **Linux**: Vulkan + OpenGL 3.1/4.3 (DirectX profiles are blocked)
+
+- `-DIX_RENDERER_PROFILE=DX9`
+- `-DIX_RENDERER_PROFILE=DX10`
+- `-DIX_RENDERER_PROFILE=DX11`
+- `-DIX_RENDERER_PROFILE=DX12`
+- `-DIX_RENDERER_PROFILE=VULKAN`
+- `-DIX_RENDERER_PROFILE=OPENGL31`
+- `-DIX_RENDERER_PROFILE=OPENGL` (OpenGL 4.3 default)
+- `-DIX_RENDERER_PROFILE=ALL` (DX9 + DX10 + DX11 + DX12 + Vulkan + OpenGL 3.1 + OpenGL 4.3)
+
+You can also override individual flags:
+
+- `-DIX_ENABLE_DX9=ON/OFF`
+- `-DIX_ENABLE_DX10=ON/OFF`
+- `-DIX_ENABLE_DX11=ON/OFF`
+- `-DIX_ENABLE_DX12=ON/OFF`
+- `-DIX_ENABLE_VULKAN=ON/OFF`
+- `-DIX_ENABLE_OPENGL31=ON/OFF`
+- `-DIX_ENABLE_OPENGL43=ON/OFF`
+
+Example:
+
+```bash
+cmake -S . -B build -DIX_RENDERER_PROFILE=DX11
+cmake --build build
+```
+
 ### Required (External)
 
 **DirectX SDK — June 2010**
@@ -149,8 +218,8 @@ https://www.microsoft.com/en-us/download/details.aspx?id=6812
 
 | Component | Support |
 |----------|--------|
-| OS | Windows |
-| Graphics | Direct3D 9 |
+| OS | Windows / Linux |
+| Graphics | Direct3D 9 / DirectX 10 / DirectX 11 / DirectX 12 / Vulkan / OpenGL 3.1 (Legacy) / OpenGL 4.3 |
 | Compiler | MinGW-w64 / MSVC |
 | Architecture | x86 / x64 |
 
@@ -179,3 +248,23 @@ See **LICENSE** for details.
 <p align="center">
   Built for developers who want to understand their engine.
 </p>
+
+
+ISS sky example:
+```iss
+#huhlu_sky {
+  sky-top: #223355;
+  sky-bottom: #88AADD;
+  background-image: url(assets/sky/hdri_sky.jpg);
+}
+```
+
+
+Huhlu extensions:
+- IXMaterial (PBR texture slots)
+- Camera modes: Orbit/FPS/Free/Orthographic/Perspective + FOV/Exposure/Gamma
+- Scene format `.ixs` (simple text)
+- Simple GLTF/GLB loaders
+- Area light + simple shadow factor support
+
+Advanced render features (Huhlu postfx stage): Bloom, SSAO (screen-space approximation), Tonemap and Color Grading toggles.

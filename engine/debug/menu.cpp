@@ -3,7 +3,7 @@
 #include "../interface/layout.h"
 #include <cstdio>
 
-#define MENU_BUTTON_COUNT 17
+#define MENU_BUTTON_COUNT 19
 
 static IXButton g_fireEffectButton;
 static IXButton g_inputTestButton;
@@ -22,6 +22,8 @@ static IXButton g_math2dTestButton;
 static IXButton g_transitionTestButton;
 static IXButton g_randomTestButton;
 static IXButton g_videoTestButton;
+static IXButton g_huhluTestButton;
+static IXButton g_huhluModulesTestButton;
 static const IXButton* g_menuButtons[MENU_BUTTON_COUNT];
 
 static IXDebugMenuAction g_pendingAction = IX_DEBUG_MENU_ACTION_NONE;
@@ -61,6 +63,8 @@ static void RefreshMenuLayout()
     Layout_Next(&layout, btnH, &x, &y, &width, &height); Button_SetBounds(&g_transitionTestButton,  x, y, width, height);
     Layout_Next(&layout, btnH, &x, &y, &width, &height); Button_SetBounds(&g_randomTestButton,      x, y, width, height);
     Layout_Next(&layout, btnH, &x, &y, &width, &height); Button_SetBounds(&g_videoTestButton,       x, y, width, height);
+    Layout_Next(&layout, btnH, &x, &y, &width, &height); Button_SetBounds(&g_huhluTestButton,       x, y, width, height);
+    Layout_Next(&layout, btnH, &x, &y, &width, &height); Button_SetBounds(&g_huhluModulesTestButton,       x, y, width, height);
 }
 
 static void EnsureMenuLayout()
@@ -92,6 +96,8 @@ void DebugMenu_Initialize()
     Button_Init(&g_transitionTestButton,  0, 0, 0, 0, "Transition Test");
     Button_Init(&g_randomTestButton,      0, 0, 0, 0, "Random Test");
     Button_Init(&g_videoTestButton,       0, 0, 0, 0, "Video Test");
+    Button_Init(&g_huhluTestButton,       0, 0, 0, 0, "Huhlu 3D Test");
+    Button_Init(&g_huhluModulesTestButton,       0, 0, 0, 0, "Huhlu Modules Test");
 
     Button_SetColors(&g_inputTestButton, 0xCC20324A, 0xCC294365, 0xCC35608F);
     Button_SetColors(&g_timerTestButton, 0xCC3A2A4A, 0xCC4E3870, 0xCC6A4B96);
@@ -126,6 +132,8 @@ void DebugMenu_Initialize()
     g_menuButtons[14] = &g_transitionTestButton;
     g_menuButtons[15] = &g_randomTestButton;
     g_menuButtons[16] = &g_videoTestButton;
+    g_menuButtons[17] = &g_huhluTestButton;
+    g_menuButtons[18] = &g_huhluModulesTestButton;
 
     g_pendingAction     = IX_DEBUG_MENU_ACTION_NONE;
     g_layoutCache.valid = 0;
@@ -155,6 +163,8 @@ void DebugMenu_Update(int mouseX, int mouseY, int mouseDown, int mouseReleased)
     if (Button_Handle(&g_transitionTestButton,  mouseX, mouseY, mouseDown, mouseReleased)) { g_pendingAction = IX_DEBUG_MENU_ACTION_OPEN_TRANSITION_TEST;  std::snprintf(g_statusLine, sizeof(g_statusLine), "Opening Transition Test..."); }
     if (Button_Handle(&g_randomTestButton,      mouseX, mouseY, mouseDown, mouseReleased)) { g_pendingAction = IX_DEBUG_MENU_ACTION_OPEN_RANDOM_TEST;      std::snprintf(g_statusLine, sizeof(g_statusLine), "Opening Random Test..."); }
     if (Button_Handle(&g_videoTestButton,       mouseX, mouseY, mouseDown, mouseReleased)) { g_pendingAction = IX_DEBUG_MENU_ACTION_OPEN_VIDEO_TEST;       std::snprintf(g_statusLine, sizeof(g_statusLine), "Opening Video Test..."); }
+    if (Button_Handle(&g_huhluTestButton,       mouseX, mouseY, mouseDown, mouseReleased)) { g_pendingAction = IX_DEBUG_MENU_ACTION_OPEN_HUHLU_TEST;       std::snprintf(g_statusLine, sizeof(g_statusLine), "Opening Huhlu 3D Test..."); }
+    if (Button_Handle(&g_huhluModulesTestButton,       mouseX, mouseY, mouseDown, mouseReleased)) { g_pendingAction = IX_DEBUG_MENU_ACTION_OPEN_HUHLU_MODULES_TEST;       std::snprintf(g_statusLine, sizeof(g_statusLine), "Opening Huhlu Modules Test..."); }
 }
 
 void DebugMenu_ApplyRendererState()

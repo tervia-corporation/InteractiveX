@@ -59,7 +59,7 @@ void Image_Shutdown()
     Image_SetError("Image offline");
 }
 
-int Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage)
+static int Image_LoadBitmapFile(IDirect3DDevice9* device, const char* path, IXImage* outImage, const char* tag)
 {
     WCHAR widePath[MAX_PATH];
     Bitmap* bitmap;
@@ -93,7 +93,7 @@ int Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage)
     if (!bitmap || bitmap->GetLastStatus() != Ok)
     {
         delete bitmap;
-        Image_SetError("PNG load failed");
+        Image_SetError(tag);
         return 0;
     }
 
@@ -102,7 +102,7 @@ int Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage)
     if (width == 0 || height == 0)
     {
         delete bitmap;
-        Image_SetError("PNG is empty");
+        Image_SetError("Image is empty");
         return 0;
     }
 
@@ -128,7 +128,7 @@ int Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage)
     {
         texture->Release();
         delete bitmap;
-        Image_SetError("PNG lock failed");
+        Image_SetError("Image lock failed");
         return 0;
     }
 
@@ -167,7 +167,7 @@ int Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage)
     outImage->loaded = 1;
     std::snprintf(outImage->path, sizeof(outImage->path), "%s", path);
 
-    Image_SetError("PNG loaded");
+    Image_SetError("Image loaded");
     return 1;
 }
 
@@ -211,4 +211,15 @@ const char* Image_GetPath(const IXImage* image)
 const char* Image_GetLastError()
 {
     return g_lastError;
+}
+
+
+int Image_LoadPNG(IDirect3DDevice9* device, const char* path, IXImage* outImage)
+{
+    return Image_LoadBitmapFile(device, path, outImage, "PNG load failed");
+}
+
+int Image_LoadJPG(IDirect3DDevice9* device, const char* path, IXImage* outImage)
+{
+    return Image_LoadBitmapFile(device, path, outImage, "JPG load failed");
 }

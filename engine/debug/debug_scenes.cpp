@@ -21,6 +21,8 @@
 #include "transition_test.h"
 #include "random_test.h"
 #include "video_test.h"
+#include "huhlu_test.h"
+#include "huhlu_modules_test.h"
 
 // ---------------------------------------------------------------------------
 //  Menu
@@ -48,6 +50,8 @@ static void Menu_Update(int mx, int my, int md, int mr)
     else if (a == IX_DEBUG_MENU_ACTION_OPEN_TRANSITION_TEST) Scene_RequestChange(IX_SCENE_TRANSITION_TEST);
     else if (a == IX_DEBUG_MENU_ACTION_OPEN_RANDOM_TEST)     Scene_RequestChange(IX_SCENE_RANDOM_TEST);
     else if (a == IX_DEBUG_MENU_ACTION_OPEN_VIDEO_TEST)      Scene_RequestChange(IX_SCENE_VIDEO_TEST);
+    else if (a == IX_DEBUG_MENU_ACTION_OPEN_HUHLU_TEST)      Scene_RequestChange(IX_SCENE_HUHLU_TEST);
+    else if (a == IX_DEBUG_MENU_ACTION_OPEN_HUHLU_MODULES_TEST)      Scene_RequestChange(IX_SCENE_HUHLU_MODULES_TEST);
     else DebugMenu_ApplyRendererState();
 }
 static void Menu_Render() { DebugMenu_ApplyRendererState(); }
@@ -162,6 +166,14 @@ static void VideoTest_OnEnter();
 static void VideoTest_InvalidateLayout();
 static void VideoTest_Update(int mx, int my, int md, int mr);
 static void VideoTest_Render();
+static void HuhluTest_OnEnter();
+static void HuhluTest_Update(int mx, int my, int md, int mr);
+static void HuhluTest_Render();
+static void HuhluTest_KeyDown(WPARAM key);
+static void HuhluModulesTest_OnEnter();
+static void HuhluModulesTest_InvalidateLayout();
+static void HuhluModulesTest_Update(int mx, int my, int md, int mr);
+static void HuhluModulesTest_Render();
 
 // ---------------------------------------------------------------------------
 //  Registration
@@ -186,6 +198,8 @@ void Scene_RegisterDebugScenes()
     { IXSceneCallbacks cb = { TransitionTest_OnEnter, NULL, TransitionTest_InvalidateLayout, TransitionTest_Update, TransitionTest_Render, NULL, NULL, NULL, NULL }; Scene_Register(IX_SCENE_TRANSITION_TEST, cb); }
     { IXSceneCallbacks cb = { RandomTest_OnEnter, NULL, RandomTest_InvalidateLayout, RandomTest_Update, RandomTest_Render, NULL, NULL, NULL, NULL }; Scene_Register(IX_SCENE_RANDOM_TEST, cb); }
     { IXSceneCallbacks cb = { VideoTest_OnEnter, NULL, VideoTest_InvalidateLayout, VideoTest_Update, VideoTest_Render, NULL, NULL, NULL, NULL }; Scene_Register(IX_SCENE_VIDEO_TEST, cb); }
+    { IXSceneCallbacks cb = { HuhluTest_OnEnter, NULL, NULL, HuhluTest_Update, HuhluTest_Render, NULL, NULL, NULL, HuhluTest_KeyDown }; Scene_Register(IX_SCENE_HUHLU_TEST, cb); }
+    { IXSceneCallbacks cb = { HuhluModulesTest_OnEnter, NULL, HuhluModulesTest_InvalidateLayout, HuhluModulesTest_Update, HuhluModulesTest_Render, NULL, NULL, NULL, NULL }; Scene_Register(IX_SCENE_HUHLU_MODULES_TEST, cb); }
 }
 
 // Math2D inserido por patch — callbacks
@@ -210,3 +224,14 @@ static void VideoTest_OnEnter()  { DebugVideoTest_Initialize(); DebugVideoTest_A
 static void VideoTest_InvalidateLayout() { DebugVideoTest_InvalidateLayout(); }
 static void VideoTest_Update(int mx, int my, int md, int mr) { DebugVideoTest_Update(mx, my, md, mr); if (DebugVideoTest_ShouldReturnToMenu()) { DebugVideoTest_ClearReturnToMenu(); Scene_RequestChange(IX_SCENE_MENU); } }
 static void VideoTest_Render()   { DebugVideoTest_ApplyRendererState(Timer_GetRenderFPS(), Timer_GetSmoothedFrameMilliseconds()); DebugVideoTest_Render(); }
+
+// Huhlu Test
+static void HuhluTest_OnEnter()  { DebugHuhlu_Initialize(); DebugHuhlu_ApplyRendererState(Timer_GetRenderFPS(), Timer_GetSmoothedFrameMilliseconds()); }
+static void HuhluTest_Update(int mx, int my, int md, int mr) { DebugHuhlu_Update(mx, my, md, mr); if (DebugHuhlu_ShouldReturnToMenu()) { DebugHuhlu_ClearReturnToMenu(); Scene_RequestChange(IX_SCENE_MENU); } }
+static void HuhluTest_Render()   { DebugHuhlu_ApplyRendererState(Timer_GetRenderFPS(), Timer_GetSmoothedFrameMilliseconds()); DebugHuhlu_Render(); }
+static void HuhluTest_KeyDown(WPARAM key) { DebugHuhlu_HandleKeyDown((unsigned int)key); }
+
+static void HuhluModulesTest_OnEnter(){ DebugHuhluModules_Initialize(); DebugHuhluModules_ApplyRendererState(Timer_GetRenderFPS(), Timer_GetSmoothedFrameMilliseconds()); }
+static void HuhluModulesTest_InvalidateLayout(){ DebugHuhluModules_InvalidateLayout(); }
+static void HuhluModulesTest_Update(int mx,int my,int md,int mr){ DebugHuhluModules_Update(mx,my,md,mr); if(DebugHuhluModules_ShouldReturnToMenu()){ DebugHuhluModules_ClearReturnToMenu(); Scene_RequestChange(IX_SCENE_MENU);} }
+static void HuhluModulesTest_Render(){ DebugHuhluModules_ApplyRendererState(Timer_GetRenderFPS(), Timer_GetSmoothedFrameMilliseconds()); }

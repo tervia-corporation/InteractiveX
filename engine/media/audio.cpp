@@ -114,6 +114,23 @@ namespace
 
 } // namespace
 
+
+static int EndsWithExt(const char* path, const char* ext)
+{
+    if (!path || !ext) return 0;
+    size_t lp = std::strlen(path), le = std::strlen(ext);
+    if (lp < le) return 0;
+    const char* p = path + (lp - le);
+    while (*p && *ext)
+    {
+        char a = *p++; char b = *ext++;
+        if (a >= 'A' && a <= 'Z') a = (char)(a - 'A' + 'a');
+        if (b >= 'A' && b <= 'Z') b = (char)(b - 'A' + 'a');
+        if (a != b) return 0;
+    }
+    return 1;
+}
+
 // ---------------------------------------------------------------------------
 //  Lifecycle
 // ---------------------------------------------------------------------------
@@ -279,6 +296,56 @@ float MediaAudio_SFXGetMasterVolume() { return g_sfxMasterVolume; }
 // ---------------------------------------------------------------------------
 const char* MediaAudio_GetLastError()        { return g_lastError;        }
 const char* MediaAudio_GetLastResolvedPath() { return g_lastResolvedPath; }
+
+
+int MediaAudio_MusicPlayMP3(const char* relativeAssetPath, int loop)
+{
+    if (!EndsWithExt(relativeAssetPath, ".mp3")) { SetError("Music: expected .mp3"); return 0; }
+    return MediaAudio_MusicPlay(relativeAssetPath, loop);
+}
+
+int MediaAudio_MusicPlayOGG(const char* relativeAssetPath, int loop)
+{
+    if (!EndsWithExt(relativeAssetPath, ".ogg")) { SetError("Music: expected .ogg"); return 0; }
+    return MediaAudio_MusicPlay(relativeAssetPath, loop);
+}
+
+int MediaAudio_SFXPlayMP3(const char* relativeAssetPath, float volume)
+{
+    if (!EndsWithExt(relativeAssetPath, ".mp3")) { SetError("SFX: expected .mp3"); return 0; }
+    return MediaAudio_SFXPlay(relativeAssetPath, volume);
+}
+
+int MediaAudio_SFXPlayOGG(const char* relativeAssetPath, float volume)
+{
+    if (!EndsWithExt(relativeAssetPath, ".ogg")) { SetError("SFX: expected .ogg"); return 0; }
+    return MediaAudio_SFXPlay(relativeAssetPath, volume);
+}
+
+
+static float g_fadeTarget = -1.0f;
+static float g_fadeSpeed = 0.0f;
+
+void MediaAudio_MusicFadeTo(float targetVolume, float seconds)
+{
+    if (targetVolume < 0.0f) targetVolume = 0.0f;
+    if (targetVolume > 1.0f) targetVolume = 1.0f;
+    if (seconds <= 0.0001f) { MediaAudio_MusicSetVolume(targetVolume); g_fadeTarget = -1.0f; return; }
+    g_fadeTarget = targetVolume;
+    g_fadeSpeed = (targetVolume - g_musicVolume) / seconds;
+}
+
+void MediaAudio_Update(float deltaSeconds)
+{
+    if (g_fadeTarget < 0.0f) return;
+    float v = g_musicVolume + g_fadeSpeed * deltaSeconds;
+    if ((g_fadeSpeed > 0.0f && v >= g_fadeTarget) || (g_fadeSpeed < 0.0f && v <= g_fadeTarget))
+    {
+        v = g_fadeTarget;
+        g_fadeTarget = -1.0f;
+    }
+    MediaAudio_MusicSetVolume(v);
+}
 
 // ---------------------------------------------------------------------------
 //  API legada  (roteada para o canal de musica)

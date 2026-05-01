@@ -23,6 +23,8 @@ void MediaAudio_MusicSetVolume(float volume);   // 0.0 = mudo, 1.0 = normal
 float MediaAudio_MusicGetVolume();
 int  MediaAudio_MusicIsPlaying();
 int  MediaAudio_MusicIsPaused();
+void MediaAudio_MusicFadeTo(float targetVolume, float seconds);
+void MediaAudio_Update(float deltaSeconds);
 
 // ---------------------------------------------------------------------------
 //  SFX pool  (ate IX_SFX_VOICES vozes simultaneas, fire-and-forget)
@@ -36,6 +38,11 @@ int  MediaAudio_MusicIsPaused();
 #define IX_SFX_VOICES 8
 
 int  MediaAudio_SFXPlay(const char* relativeAssetPath, float volume);
+
+int  MediaAudio_MusicPlayMP3(const char* relativeAssetPath, int loop);
+int  MediaAudio_MusicPlayOGG(const char* relativeAssetPath, int loop);
+int  MediaAudio_SFXPlayMP3(const char* relativeAssetPath, float volume);
+int  MediaAudio_SFXPlayOGG(const char* relativeAssetPath, float volume);
 void MediaAudio_SFXSetMasterVolume(float volume);  // 0.0 - 1.0, afeta todas as vozes
 float MediaAudio_SFXGetMasterVolume();
 
